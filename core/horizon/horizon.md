@@ -8,12 +8,16 @@ You connect to:
 
 Authenticate using your credentials and set domain to "hpc".
 
+![Auth](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-login.png?raw=true)
+
 ## Import Key Pair
 This will be the Key Pair that will be used to connect to the virtual machines (aka instances)).
 
 If you already have a RSA SSH Key you can import it:
 - `Compute > Key Pairs: Import Public Key`
 choose Key Type: SSH Key
+
+![Pubkey](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-pubkey.png?raw=true)
 
 If do not have an existing SSH Key pair you can create one using:
 ```bash
@@ -29,6 +33,9 @@ We will create one to allow SSH connections:
 - Name the new security group "SSH"
 - Add a rule to allow SSH traffic.
 
+![secgroup create](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-security-group.png?raw=true)
+![secgroup rules](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-security-group.png?raw=true)
+
 ## Launch instance
 To launch a new virtual instance go to:
 - `Compute > Instances: Launch instance`
@@ -41,6 +48,9 @@ You will have to fill the following:
 - Key Pair: javicacheiro
 
 After the instance is booted you will see its "IP Address" and you will be able to connect using SSH using the `cesgaxuser` and your ssh key.
+
+![launch source](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-launch-source.png?raw=true)
+![launch security group](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-launch-security-group.png?raw=true)
 
 ## Looking further
 ### Images
