@@ -47,8 +47,11 @@ After the instance is booted you will see its "IP Address" and you will be able 
 Under `Compute > Images` you can see the existing images.
 
 By default you only see the list of supported images.
+![Images](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-images.png?raw=true)
 
 You can see additional images if you include also "community" images which include images that are not LTS, images that are not yet fully tested or old versions of existing images. To do that click in the search box and select "Visibility" and then "Community".
+
+![Community images](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-images-comunity.png?raw=true)
 
 ### Networks (VPC)
 You can create your own networks in `Network > Networks`.
