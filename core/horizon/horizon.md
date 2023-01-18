@@ -19,14 +19,18 @@ choose Key Type: SSH Key
 
 ![Pubkey](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-pubkey.png?raw=true)
 
-If do not have an existing SSH Key pair you can create one using:
+If you do not have an existing SSH Key pair you can create one using:
 ```bash
 ssh-keygen -t rsa -b 4096
 ```
 and the public key will be available under: `.ssh/id_rsa.pub`
 
+TIP: You can copy several keys in the text box and all of them will be added.
+
+NOTE: The key is only loaded on boot. Changes to the key will not affect already running instances.
+
 ## Create Security Group
-The security group represents a sort of firewall rules for the instances.
+The security group represents a sort of firewall for the instances to the network level.
 
 We will create one to allow SSH connections:
 - `Network > Security Groups: Create Security Group`
@@ -35,6 +39,16 @@ We will create one to allow SSH connections:
 
 ![secgroup create](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-security-group.png?raw=true)
 ![secgroup rules](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-security-group.png?raw=true)
+
+## Images
+Under `Compute > Images` you can see the existing images.
+
+By default you only see the list of supported images.
+![Images](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-images.png?raw=true)
+
+You can see additional images if you include also "community" images which include images that are not LTS, images that are not yet fully tested or old versions of existing images. To do that click in the search box and select "Visibility" and then "Community".
+
+![Community images](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-images-comunity.png?raw=true)
 
 ## Launch instance
 To launch a new virtual instance go to:
@@ -52,17 +66,16 @@ After the instance is booted you will see its "IP Address" and you will be able 
 ![launch source](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-launch-source.png?raw=true)
 ![launch security group](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-launch-security-group.png?raw=true)
 
-## Looking further
-### Images
-Under `Compute > Images` you can see the existing images.
+## Advanced
+### Storage
+Under `Volumes` you can create dedicated volumes (block devices) to attach to your instances.
+It is also possible to create snapshots and backups of existing volumes.
 
-By default you only see the list of supported images.
-![Images](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-images.png?raw=true)
-
-You can see additional images if you include also "community" images which include images that are not LTS, images that are not yet fully tested or old versions of existing images. To do that click in the search box and select "Visibility" and then "Community".
-
-![Community images](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-images-comunity.png?raw=true)
+Later on you can convert a snapshot in a volume and boot a new instance from there, or even you can boot directly from the snapshot.
 
 ### Networks (VPC)
 You can create your own networks in `Network > Networks`.
 
+This allows you to create your own Virtual Private Cloud (VPC).
+
+Additional networks ports can be attached to a running instance.
