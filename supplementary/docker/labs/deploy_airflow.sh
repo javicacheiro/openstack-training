@@ -20,10 +20,8 @@ if ! openstack security group show $SECGROUP &> /dev/null; then
     openstack security group create $SECGROUP
     # SSH
     openstack security group rule create --protocol tcp --dst-port 22:22 --remote-ip 0.0.0.0/0 $SECGROUP
-    # HTTP
-    openstack security group rule create --protocol tcp --dst-port 80:80 --remote-ip 0.0.0.0/0 $SECGROUP
-    # HTTPS
-    openstack security group rule create --protocol tcp --dst-port 443:443 --remote-ip 0.0.0.0/0 $SECGROUP
+    # Airflow
+    openstack security group rule create --protocol tcp --dst-port 8080:8080 --remote-ip 0.0.0.0/0 $SECGROUP
     # ICMP
     openstack security group rule create --protocol icmp --remote-ip 0.0.0.0/0 $SECGROUP
 fi
