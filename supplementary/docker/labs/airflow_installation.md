@@ -33,12 +33,12 @@ curl -LfO https://airflow.apache.org/docs/apache-airflow/2.4.0/docker-compose.ya
 ```
 
 It will deploy the following services:
-- airflow-scheduler: The scheduler monitors all tasks and DAGs, then triggers the task instances once their dependencies are complete.
-- airflow-webserver: The webserver is available at http://localhost:8080.
-- airflow-worker: The worker that executes the tasks given by the scheduler.
-- airflow-init: The initialization service.
-- postgres: the database
-- redis: to forward messages from scheduler to workers
+- airflow-scheduler
+- airflow-webserver
+- airflow-worker
+- airflow-init
+- postgres
+- redis
 
 Directories shared with the containers (docker volumes):
 - ./dags: where we will place our DAG files
