@@ -40,30 +40,31 @@ Download container image:
 
     docker pull alpine:3.17
 
+### Running an interactive container
 Run container interactively based on the downloaded image:
 
     docker run -ti alpine:3.17 /bin/sh
 
-Delete an image from the local cache:
-
-    docker rmi alpine:3.17
-
-## Running an interactive container
 The `-t` flag assigns a pseudo-tty and the `-i` flag grabs STDIN
-
-    docker run -ti alpine:3.17 /bin/bash
 
 To detach the tty without exiting the shell, use the escape sequence
 
     Ctrl-p + Ctrl-q
 
-This will continue to exist in a stopped state once exited (see `docker ps -a`)
-
 To reconnect to an interactive container use:
 
     docker attach elegant_mestorf
 
-## Running a daemonized container
+Finally you can stop the container with:
+
+    docker stop elegant_mestorf
+
+The container will continue to exist in a stopped state once exited (see `docker ps -a`)
+
+Lab:
+- [Running a Python 3.10 development environment](labs/creating_a_python_3.10_development_environment)
+
+### Running a daemonized container
 The `-d` flag tells Docker to run the container and put it in the background
 
     docker run -d alpine:3.17 /bin/sh -c "while true; do date; echo hello world; sleep 2; done"
@@ -82,10 +83,101 @@ Or we can do both things in a single command:
 
     docker rm -f <container_name>
 
+### Docker Compose
+Docker Compose allows to run deployments with multiple containers defined in a `docker-compose.yml` file.
+
+To start a `docker-compose.yml` go to the directory where it is located and run:
+
+    docker compose up -d
+
+this will automatically run in detached mode all the containers defined in the file.
+
+To see the logs:
+
+    docker compose logs
+
+To stop all the containers in the file:
+
+    docker compose stop
+
+NOTE: New versions of Docker include the functionality of the standalone `docker-compose` utility inside the docker cli as a docker plugin. The only difference is that now you will use `docker compose` instead of `docker-compose`.
+
+## Creating your own container images
+### Creating our own image interactively
+This is always a good starting point to experiment with the installation:
+
+For example in this case we will create an alpine image that includes the `jq` tool.
+
+Start the container:
+
+    docker run -ti alpine:3.17.2 /bin/sh
+
+We can see that jq is not installed by default in the alpine image.
+```
+/ # jq
+/bin/sh: jq: not found
+```
+
+Install/configure all that is needed:
+
+    apk update
+    apk add jq
+
+Clean what is not needed and exit:
+
+    rm -rf /var/cache/apk/*
+    rm /root/.ash_history
+    exit
+
+Look for the container ID, we have to use the `-a` option to see stopped containers:
+
+    docker ps -a
+
+Commit changes:
+
+    docker commit -m="Alpine with jq" --author="Javier Cacheiro" a1d5277534f9 javicacheiro/alpine:3.17.2-jq-test
+
+Login to docker hub:
+
+    docker login
+
+Publish the image to docker hub:
+
+    docker push javicacheiro/alpine:3.17.2-jq-test
+
+### Creating our own image using a Dockerfile
+Once you know which commands you have to run to install your application, the image creation procedure can be automated using a `Dockerfile`. This is the recommended way to keep track of how the container was built so it can be later updated.
+
+First we create a `Dockerfile` with the commands needed:
+
+```
+FROM alpine:3.17.2
+MAINTAINER Javier Cacheiro <javier.cacheiro.lopez@cesga.gal>
+
+RUN apk update \
+ && apk add jq \
+ && rm -rf /var/cache/apk/*
+
+ENTRYPOINT ["/usr/bin/jq"]
+CMD ["--help"]
+```
+
+Now we build the image:
+
+    docker build -t javicacheiro/alpine:3.17.2-jq .
+
+Publish the image to docker hub:
+
+    docker push javicacheiro/alpine:3.17.2-jq
+
 ## Commands
-Run a container from dockerhub:
+Run a container:
 
     docker run -ti centos:7 /bin/bash
+
+Execute a shell inside a container:
+
+    docker exec -ti <container_name> /bin/bash
 
 List running containers
 
@@ -146,7 +238,8 @@ Show the history of an image:
 
     docker history hadoop/fs02-hadoop
 
-## More about logging
+## Appendix
+### More about logging
 Docker manages the logs of the running containers. Applications that run inside containers should write its logs to `/dev/stdout`, keep in mind that using `/dev/console` does not work. Also programs should avoid using `/dev/log` synce journald is not running.
 
 To see the logs use (equivalent of `tail -f`):
@@ -157,94 +250,18 @@ Or you can also see the logs from a given date:
 
     docker docker logs -t --since=2022-09-02T09:56 login5
 
-## Docker Compose
-Docker Compose allows to run deployments with multiple containers defined in a `docker-compose.yml` file.
+## Truncating logs
+Logs are stored in json format in `/var/lib/docker/containers/`. The directory name starts with the container id.
 
-To start a `docker-compose.yml` go to the directory where it is located and run:
+Logs can get very very big.
 
-    docker compose up -d
-
-this will automatically run in detached mode all the containers defined in the file.
-
-To see the logs:
-
-    docker compose logs
-
-To stop all the containers in the file:
-
-    docker compose stop
-
-NOTE: New versions of Docker include the functionality of the standalone `docker-compose` utility inside the docker cli as a docker plugin. The only difference is that now you will use `docker compose` instead of `docker-compose`.
-
-## Creating your own container images
-### Creating our own image interactively
-This is always a good starting point to experiment with the installation:
-
-For example in this case we will create an alpine image that includes the `jq` tool.
-
-Start the container:
-
-    docker run -ti alpine:3.17.2 /bin/sh
-
-We can see that jq is not installed by default in the alpine image.
-```
-/ # jq
-/bin/sh: jq: not found
-```
-
-Install/configure all that is needed:
-
-    apk update
-    apk add jq
-
-Clean what is not needed and exit:
-
-    rm -rf /var/cache/apk/*
-    rm /root/.ash_history
-    exit
-
-Look for the container ID, we have to use the `-a` option to see stopped containers:
-
-    docker ps -a
-
-Commit changes:
-
-    docker commit -m="Alpine with jq" --author="Javier Cacheiro" a1d5277534f9 javicacheiro/alpine:3.17.2-jq-test
-
-Login to docker hub:
-
-    docker login
-
-Publish the image:
-
-    docker push javicacheiro/alpine:3.17.2-jq-test
-
-### Creating our own image using a Dockerfile
-Once you know which commands you have to run to install your application, the image creation procedure can be automated using a `Dockerfile`. This is the recommended way to keep track of how the container was built so it can be later updated.
-
-First we create a `Dockerfile` with the commands needed:
+So it is a good idea to set a process that truncates them periodically (like logrotate does with standard logs):
 
 ```
-FROM alpine:3.17.2
-MAINTAINER Javier Cacheiro <javier.cacheiro.lopez@cesga.gal>
-
-RUN apk update \
- && apk add jq \
- && rm -rf /var/cache/apk/*
-
-ENTRYPOINT ["/usr/bin/jq"]
-CMD ["--help"]
+cd /var/lib/docker/containers/8f8e60c96938314aead95a06bf0b36ef1972d950f856c847930e41f12ec05dcd
+truncate -s 1M 8f8e60c96938314aead95a06bf0b36ef1972d950f856c847930e41f12ec05dcd-json.log
 ```
-
-Now we build the image:
-
-    docker build -t javicacheiro/alpine:3.17.2-jq .
-
-Publish the image:
-
-    docker push javicacheiro/alpine:3.17.2-jq
-
-## CMD vs ENTRYPOINT
+### CMD vs ENTRYPOINT
 Usually the Dockerfile will end with a `CMD` or `ENTRYPOINT` instruction.
 
 `CMD` is used for containers that run a service. It contains the executable as well as the arguments needed to start the service. For example this is the `CMD` used to start nginx in the official image:
@@ -270,27 +287,22 @@ ENTRYPOINT ["/usr/bin/jq"]
 CMD ["--help"]
 ```
 
-### Publishing the image
-Login to docker hub:
+## Volumes
+You can share storage from the host with the container using the `-v` option:
 
-    docker login
+    -v <host_dir>:<container_dir>
 
-Tag the image:
+you can also share a single file:
 
-    docker tag <imageID> javicacheiro/alpine:custom
+    -v <host_dir>:<container_dir>
 
-Push an image to docker hub:
+It is recommended to keep data in a separated volume from the base image.
 
-    docker push javicacheiro/alpine:custom
+## Networking
+### Redirecting ports
+You redirect host ports to container ports using the `-p` option:
 
-Retrieve an image from our account in docker hub:
-
-    docker pull javicacheiro/alpine:custom
-
-To delete it from Docker Hub repository we have to sign in and use the "Delete repository" link.
-
-## Advanced Networking
-Reference: https://docs.docker.com/articles/networking/
+    -p <host_port>:<container_port>
 
 ### Using the same network interfaces and addresses as the host
 Running the VM using the same network interfaces as the host machine:
@@ -312,7 +324,7 @@ To fix it we have to change back the default policy:
 
     iptables -P FORWARD ACCEPT
 
-## Running in privileged mode
+## Running containers in privileged mode
 Sometimes you may need to run a container in privileged mode so it has direct access to some devices:
 
     docker run --privileged -v /dev/infiniband:/dev/infiniband -i -t alcachi/centos6:infiniband /bin/bash
@@ -341,14 +353,25 @@ To create a custom resolv.conf use the following options of docker run:
 
     docker rmi $(docker images |grep none|awk '{print $3}')
 
-## Truncate logs
-Logs are stored in json format in `/var/lib/docker/containers/`. The directory name starts with the container id.
+### Publishing container images to docker hub
+The following is a summary of the steps needed to publish an existing image in our local image cache to docker hub.
 
-Logs can get very very big.
+Login to docker hub:
 
-So it is a good idea to set a process that truncates them periodically (like logrotate does with standard logs):
+    docker login
 
-```
-cd /var/lib/docker/containers/8f8e60c96938314aead95a06bf0b36ef1972d950f856c847930e41f12ec05dcd
-truncate -s 1M 8f8e60c96938314aead95a06bf0b36ef1972d950f856c847930e41f12ec05dcd-json.log
-```
+Tag the image:
+
+    docker tag <imageID> javicacheiro/alpine:custom
+
+Push the image to docker hub:
+
+    docker push javicacheiro/alpine:custom
+
+To delete it from Docker Hub repository we have to sign in and use the "Delete repository" link.
+
+### Creating a private container registry
+Instead of using docker hub we can also deploy our own local registry. This will allow us to have a private registry and also to improve the image pull and push times.
+
+Lab:
+- [Docker installation](labs/private_docker_registry_installation.md)
