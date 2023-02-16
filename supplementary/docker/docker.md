@@ -83,6 +83,9 @@ Or we can do both things in a single command:
 
     docker rm -f <container_name>
 
+Lab:
+- [Running Redis](labs/running_redis)
+
 ### Docker Compose
 Docker Compose allows to run deployments with multiple containers defined in a `docker-compose.yml` file.
 
@@ -374,4 +377,9 @@ To delete it from Docker Hub repository we have to sign in and use the "Delete r
 Instead of using docker hub we can also deploy our own local registry. This will allow us to have a private registry and also to improve the image pull and push times.
 
 Lab:
-- [Docker installation](labs/private_docker_registry_installation.md)
+- [Private container registry installation](labs/private_docker_registry_installation.md)
+
+## Labs
+Labs:
+- [Airflow installation](labs/airflow_installation)
+- [Automatic Airflow deployment (fully automated)](labs/deploy_airflow.sh)

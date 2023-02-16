@@ -93,7 +93,6 @@ else
 fi
 ```
 
-
 Now simply run:
 ```bash
 ./airflow.sh info
@@ -108,7 +107,6 @@ The webserver is available at: http://airflow:8080.
 
 The default account has the login `airflow` and the password `airflow`.
 
-
 ### Stopping the services
 ```bash
 sudo docker compose down
@@ -120,7 +118,6 @@ docker-compose down --volumes --remove-orphans
 # Be sure to save what you want before removing these dirs
 rm -rf dags logs plugins data
 ```
-
 
 Reference:
 - [Running Airflow in Docker](https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html)
