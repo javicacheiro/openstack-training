@@ -312,6 +312,19 @@ Running the VM using the same network interfaces as the host machine:
 
     docker run --net=host ...
 
+### Creating isolated local node networks for inter-container communication
+By default all containers in the same host share the same network but we can create isolated local networks for each group of containers.
+
+For example if we want to create a local network to isolate opensearch containers we woud run:
+
+```
+docker network create test-net
+docker run --net test-net --rm --name test1 alpine
+docker run --net test-net --rm --name test2 alpine
+```
+
+Apart from isolation, another advantadge that we get when using a dedicated network is that we will be able to access the other containers by its name.
+
 ### Adding a static IP with pipework
 We can use [pipework](https://github.com/jpetazzo/pipework) to add an IP to the container after it is running:
 
