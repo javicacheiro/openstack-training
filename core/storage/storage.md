@@ -64,8 +64,8 @@ qemu-img convert -f qcow2 -O raw image.img image.raw
 We can get existing images for Centos, Debian, Ubuntu, RHEL, Arch Linux FreeBSD or Microsfot Windows in:
 - [Get images](https://docs.openstack.org/image-guide/obtain-images.html)
 
-Lab:
-- [Uploading Cirros image](labs/uploading_cirros_image)
+**Lab**:
+- [Uploading Cirros image](labs/uploading_cirros_image.md)
 
 ## Customizing an existing image: creating a volume from a image
 We can create a volume from an existing image so this volume can then used to boot an instance or to do manual modifications to the image (eg. to later create a new image):
@@ -197,4 +197,4 @@ And then there is a important option: "Create New Volume". If we select "No" the
 
 ## Final lab
 Lab:
-- [Storage lab](labs/storage_lab)
+- [Storage lab](labs/storage_lab.md)
