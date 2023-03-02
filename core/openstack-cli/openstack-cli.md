@@ -2,7 +2,7 @@
 
 ## Installing openstack-cli
 First we need to install the CLI tools. We will do it in the following lab:
-- [Installing openstack-cli lab](labs/installing_openstack-cli)
+- [Installing openstack-cli lab](labs/installing_openstack-cli.md)
 
 ## OpenStack RC File
 To use the `openstack-cli` we have to use a configuration file that provides the details about the OpenStack installation. This is called the `OpenStack RC File`.
@@ -457,8 +457,8 @@ We can get existing images for Centos, Debian, Ubuntu, RHEL, Arch Linux FreeBSD 
 - [Get images](https://docs.openstack.org/image-guide/obtain-images.html)
 
 Labs:
-- [Uploading Cirros image](labs/uploading_cirros_image)
-- [Uploading Ubuntu 22.10](labs/uploading_ubuntu_22_10)
+- [Uploading Cirros image](labs/uploading_cirros_image.md)
+- [Uploading Ubuntu 22.10](labs/uploading_ubuntu_22_10.md)
 
 ## Sharing an image with other people
 Set the image as shared if needed:

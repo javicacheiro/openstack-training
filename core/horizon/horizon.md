@@ -71,4 +71,4 @@ This allows you to create your own Virtual Private Cloud (VPC).
 Additional networks ports can be attached to a running instance.
 
 ## Labs
-- [Launching instances with Horizon](labs/launching_instances_with_horizon)
+- [Launching instances with Horizon](labs/launching_instances_with_horizon.md)

@@ -107,8 +107,8 @@ During the installation we can use the server graphical console to interact with
 
 The console is also very useful when the instance crashes.
 
-Lab:
-- [Installing Rocky 9.1 from ISO](labs/installing_rocky_9.1_from_iso)
+**Lab**:
+- [Installing Rocky 9.1 from ISO](labs/installing_rocky_9.1_from_iso.md)
 
 ## Creating a volume and attaching it to an instance
 It is a good practice to separate the data from the base system, for that we create a new volume:
