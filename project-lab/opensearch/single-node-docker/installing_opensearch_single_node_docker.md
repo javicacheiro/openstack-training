@@ -1,20 +1,32 @@
-
-OpenSearch (Elasticsearch)
-OpenDashboards (Kibana)
+# Installing Opensearch and Opensearch Dashboards in single-node mode using Docker
 
 Create server:
 ```
 source course-6-project-openrc.sh
 
-openstack server create --boot-from-volume 20 --flavor m1.2c2m --image baseos-Rocky-8.5-v2 --key-name javicacheiro --security-group SSH opensearch-single-node-docker
+openstack server create --boot-from-volume 20 --flavor m1.2c4m --image baseos-Rocky-8.5-v2 --key-name javicacheiro --security-group SSH --network provnet-formacion-vlan-133 opensearch-single-node-docker
 ```
 
-Copy the files:
+Copy the files needed for the lab to the new VM:
 ```
-scp -r opensearch opensearch-dashboards cesgaxuser@opensearch-single-node-docker:
+scp -r opensearch opensearch-dashboards docker.repo cesgaxuser@opensearch-single-node-docker:
 ```
 
-We will build two container images, one for opensearch and the other for opensearch-dashboards.
+Connect to the VM and install docker and some useful packages:
+```bash
+sudo cp docker.repo /etc/yum.repos.d
+sudo dnf install -y --enablerepo docker docker-ce docker-compose-plugin bash-completion vim
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+
+We will enable the cesgaxuser to use docker so we do not have to type sudo each time:
+```
+sudo usermod --append --groups docker cesgaxuser
+```
+Remember that you have to reconnect for the change in the groups to take effect.
+
+In this lab we will build two container images, one for opensearch and the other for opensearch-dashboards.
 
 ## Opensearch
 Go to the directory with the Dockerfile for opensearch:
@@ -34,12 +46,19 @@ docker images
 
 Before running the container we have to increase the `vm.max_map_count` kernel setting to 262144:
 ```
-sysctl -w vm.max_map_count=262144
+sudo sysctl -w vm.max_map_count=262144
+```
+
+Now we can run opensearch using docker.
+
+First we will create a network to enable inter-container communication:
+```
+docker network create opensearch-net
 ```
 
 Now we can run opensearch using the image we have just built:
 ```
-docker run -d -p 9200:9200 -e bootstrap.memory_lock=true --ulimit memlock=-1:-1 --ulimit nofile=65536:65536 -e path.data=/data --name opensearch opensearch
+docker run -d -p 9200:9200 --network opensearch-net -e bootstrap.memory_lock=true --ulimit memlock=-1:-1 --ulimit nofile=65536:65536 -e path.data=/data --name opensearch opensearch
 ```
 
 Check the logs to see when the service is ready (it takes around 1 minute to start):
@@ -70,7 +89,7 @@ docker images
 
 Now we can run opensearch-dashboards using the image we have just built:
 ```
-docker run -d -p 5601:5601 --name opensearch-dashboards opensearch-dashboards
+docker run -d -p 5601:5601 --network opensearch-net -e OPENSEARCH_HOSTS='["https://opensearch:9200"]' --name opensearch-dashboards opensearch-dashboards
 ```
 
 Check the logs to see when the service is ready (it takes around 1 minute to start):

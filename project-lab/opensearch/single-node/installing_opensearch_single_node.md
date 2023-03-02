@@ -62,7 +62,7 @@ sudo systemctl restart opensearch
 ```
 sudo curl -SL https://artifacts.opensearch.org/releases/bundle/opensearch-dashboards/2.x/opensearch-dashboards-2.x.repo -o /etc/yum.repos.d/opensearch-dashboards-2.x.repo
 
-sudo yum install -y 'opensearch-dashboards-2.5.0'
+sudo yum install -y 'opensearch-dashboards-2.5.0' findutils
 sudo systemctl start opensearch-dashboards
 sudo systemctl enable opensearch-dashboards
 ```
