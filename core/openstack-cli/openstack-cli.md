@@ -413,15 +413,6 @@ Add a new port to the server (a port has its own MAC and IP):
 
 NOTE: You can not add a keypair to a server once it is running because the keys are only configured the first time the server is started.
 
-## Network
-List existing networks:
-
-    openstack list networks
-
-List existing ports (a port is like a virtual NIC with its own mac address and also an associated IP address, they are automatically created when you boot a server and associate it to a network):
-
-    openstack list ports
-
 ## Images
 List existing images:
 
@@ -555,13 +546,99 @@ We can now see that the volume appears under the new project and it has dissappe
 openstack volume list
 ```
 
-## Creating a port
+## Showing the console URL
+To see the console URL of a given server:
+```
+openstack console url show my-server
+```
+then you can just connect to the URL returned.
+
+## Networks
+List existing networks:
+```
+openstack list networks
+```
+
+List routers:
+```
+openstack router list
+```
+
+List subnets:
+```
+openstack subnet list
+```
+
+Show information about a given subnet:
+```
+openstack subnet show subnet-formacion-vlan-133
+```
+
+List existing ports (a port is like a virtual NIC with its own mac address and also an associated IP address, they are automatically created when you boot a server and associate it to a network):
+
+    openstack list ports
+
+## Creating a tenant network
+We can create a tenant network using:
+```bash
+NET_NAME=net_course_1
+SUBNET_NAME=subnet_course_1
+openstack network create --mtu 1500 ${NET_NAME}
+openstack subnet create ${SUBNET_NAME} --network ${NET_NAME} --subnet-range 192.168.200.0/24 --dns-nameserver 193.144.34.209
+```
+
+## Give access to the internet to the tenant network
+If you do not see the `router-external` then you have to create your own router (this consumes a public IP from the `public-default` network).
+
+First you have to create a router, you can do it from network topology (or from the router the menu).
+
+You have to go to network topology and add a port to the gateway with the tenant network.
+
+From the CLI:
+```
+EXTERNAL_ROUTER=router-external
+SUBNET_NAME=subnet_course_1
+openstack router add subnet ${EXTERNAL_ROUTER} ${SUBNET_NAME}
+```
+
+## Forwarding traffic to the internal nodes
+Connecting to an instance in the tenant network that has a floating ip we can jump to all the other instances in the tenant network, but sometimes this is cumbersome.
+
+One simple option to enable access to other instances it is to use iptables in the instance with the floating IP.
+
+Let's consider this scenario:
+- VM1: 192.168.200.100 and floating IP
+- VM2: 192.168.200.2
+- VM3: 192.168.200.3
+
+We want to connect through ssh to VM2 and VM3 from the floating ip of VM1 using ports 1001 and 1002:
+```
+echo 1 > /proc/sys/net/ipv4/ip_forward
+iptables -t nat -A PREROUTING -p tcp --dport 1001 -j DNAT --to-destination 192.168.200.107:22
+iptables -t nat -A PREROUTING -p tcp --dport 1002 -j DNAT --to-destination 192.168.200.86:22
+iptables -t nat -A POSTROUTING -j MASQUERADE
+```
+
+Now we can connect to VM2 using:
+```
+ssh -p 1002 cesgaxuser@<floating_ip_vm1>
+```
+
+## Creating a server with a fixed IP
+We can create a server with a fixed IP:
+```
+openstack server create --nic net-id=private,v4-fixed-ip=192.168.1.123 --flavor m1.1c1m --image cirros vm1
+```
+
+## Assigning a fixed IP to a server using a port
 To create a port with a fixed ip address:
 ```
 openstack port create --network private --fixed-ip subnet=subpriv,ip-address=192.168.1.23 my_port_1
 ```
 
-To create a port without a specific address:
+When using the previous command we must ensure that the IP requested is not currently allocated.
+
+Sometimes it is convenient to create the port without specifying a specific address so that one available IP of the allocation pool will be assigned to it (this IP will remain associated to this port independetly if the instance using it is deleted):
 ```
 openstack port create --network private my_port_2
 ```
@@ -571,9 +648,3 @@ To attach the port to a VM:
 openstack server add port vm_nonet_1 my_port_1
 ```
 
-## Showing the console URL
-To see the console URL of a given server:
-```
-openstack console url show my-server
-```
-then you can just connect to the URL returned.
