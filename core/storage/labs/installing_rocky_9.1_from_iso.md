@@ -203,6 +203,10 @@ We will go to `Volumes > Volumes` we locate the volume and in the options menu w
 - Image Name: `<username>-rocky-9-custom`
 - Disk Format: Raw
 
+Once finished verify that the image size is the right one (sometimes the process of upload can fail and the image is truncated).
+
+NOTE: The image is automatically converted with qemu-img before uploading from Cinder (volumes) to Glance (Images), to speed up the upload process you can select QCOW2 format. For production the recommendation is to use RAW.
+
 ## Testing
 We can now start a new instance using our new image as source.
 
