@@ -24,7 +24,7 @@ openstack image create --private --disk-format iso --container-format bare --fil
 ## Create a bootable volume
 Create a bootable volume:
 - Name: `<username>-rocky-installation`
-- Size: 10GB
+- Size: 4GB
 
 Then edit it and set the bootable flag.
 
@@ -32,15 +32,15 @@ NOTE: We create a bootable volume so we can later on boot from it and customize 
 
 From the CLI this can be done with:
 ```
-openstack volume create --size 20 --bootable your-username-rocky-installation
+openstack volume create --size 4 --bootable your-username-rocky-installation
 ```
 
 ## Create a new instance
 Create a new instance:
 - Name: `<username>-install-from-iso-lab`
 - Source: Rocky-9.1
-- Volume Size: 10GB
-- Flavor: m1.1c2m
+- Create New Volume: No (ephemeral instance)
+- Flavor: m1.1c1m
 - Networks: provnet-formacion-vlan-133
 - Securiry groups: SSH
 - Key Pair: your keypair
@@ -75,11 +75,8 @@ For example use the following selections (for a basic installation):
 ![rocky](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-rocky-installation-7.png?raw=true)
 ![rocky](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-rocky-installation-8.png?raw=true)
 
-## Stop the instance
-When the installation is finished we click the final restart button from the wizard and after that we can shutdown the instance from the instance menu: "Shut Off Instance".
-
-## Dettach the volume
-Now we dettach the volume: go to the Volumes menu and in the volume select the option "Manage Attachments".
+## Delete the instance
+When the installation is finished we click the final restart button from the wizard and after that we delete the instance.
 
 ## Start an instance from the volume
 Now we will start a new instance using the volume.
@@ -87,10 +84,9 @@ Now we will start a new instance using the volume.
 - Source:
   - Select Boot Source: Volume
   - Select our volume: `<username>-rocky-installation`
-- Volume Size: 10GB
-- Flavor: m1.1c2m
+- Flavor: m1.1c1m
 - Networks: provnet-formacion-vlan-133
-- Securiry groups: SSH
+- Security groups: SSH
 - Key Pair: your keypair
 
 ## Perform additional customizations
@@ -117,10 +113,15 @@ systemctl enable cloud-init
 
 cloud-init only runs the first time a machine boots, in this case we want that it runs in the next start of the server, not now.
 
-Clean cloud-init so it will run in the next boot:
+Just in case, we will stop cloud-init and clean it,  so it will run in the next boot:
 ```
 systemctl stop cloud-init
 cloud-init clean --logs
+```
+
+We will also clean the package cache:
+```
+dnf clean all
 ```
 
 #### How cloud-init contextualizes the instance
@@ -166,16 +167,24 @@ Now we will be able to connect using the `cesgaxuser` and the configured key pai
 ssh cesgaxuser@<ip_address>
 ```
 
-Since cloud-init only runs the first time a machine boots we will have to clean it so it runs the next time the server is started.
+You can now verify the installation and check that everything is configured as you want.
+
+To finish, since cloud-init only runs the first time a machine boots and we have already booted the volume, we will have to clean it so it runs the next time the server is started.
 
 Clean cloud-init so it will run in the next boot:
 ```
+sudo -s
 systemctl stop cloud-init
 cloud-init clean --logs
 rm /home/cesgaxuser/.ssh/authorized_keys
 ```
 
 If everything is fine we can now shutdown the instance.
+```
+shutdown -h now
+```
+
+Once it is in the "Shutoff" state we can safely delete the instance.
 
 ## Note on SSH server configuration
 For cloud images it is recommended to disable password authentication for ssh connections.
@@ -188,18 +197,14 @@ PasswordAuthentication no
 In our case this change is automatically done by cloud-init.
 
 ## Upload the final volume as an image
-The last step is just to upload the volume as an image.
+The last step is to upload the volume as an image so we can use it as the source to boot multiple instances.
 
-First we will go to `Volumes > Volumes`. There we will select the system volume of our instance `<username>-temp-server` and we will use "Edit Volume" to rename it to something we will be able to identify later, eg.: `<username>-rocky-installation-customized`
-
-Now we can delete the instance (the volume will be kept).
-
-Then we will go to `Volumes > Volumes` we locate the volume and in the options menu we select "Upload to Image":
+We will go to `Volumes > Volumes` we locate the volume and in the options menu we select "Upload to Image":
 - Image Name: `<username>-rocky-9-custom`
 - Disk Format: Raw
 
 ## Testing
-We can now start a new instance using as source our new image.
+We can now start a new instance using our new image as source.
 
 ## Clean up
 When done we can clean up:
