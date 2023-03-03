@@ -1,5 +1,5 @@
 # Networking in OpenStack
-Software Defined Networking (SDN) using OVN.
+OpenStack makes use of Software Defined Networking (SDN) using OVN.
 
 Types of networks:
 - **Provider network**: datacenter networks
@@ -8,15 +8,15 @@ Types of networks:
 
 Notes:
 - Provider networks are pre-created by the administrators: eg. provnet-formacion-vlan-133
-- External networks are provider networks that have an extra flag that allows virtual routers to connect.
+- External networks are provider networks that have an extra flag that allows virtual routers to connect to them in order to add external connectity.
 - Tenant networks allow the creation of a **Virtual Private Cloud (VPC)**.
 
 
-Type of network | Who can create it | External router
-----------------+-------------------+----------------
-Provider        | Admin             | Not managed by openstack
-External        | Admin             | Managed by openstack
-Tenant          | User              | Managed by openstack
+| Type of network | Who can create it | External router |
+| ----------------+-------------------+---------------- |
+| Provider        | Admin             | Not managed by openstack |
+| External        | Admin             | Allows a router to have external access |
+| Tenant          | User              | Managed by openstack |
 
 ## Provider and external networks
 Access to provider networks has to be requested so that an admin can give our project access to them.
