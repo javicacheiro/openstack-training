@@ -13,7 +13,7 @@ Notes:
 
 
 | Type of network | Who can create it | External router |
-| ----------------+-------------------+---------------- |
+| --------------- | ----------------- | --------------- |
 | Provider        | Admin             | Not managed by openstack |
 | External        | Admin             | Allows a router to have external access |
 | Tenant          | User              | Managed by openstack |
