@@ -523,6 +523,12 @@ In case we want to use the volume as the boot volume of an instance we have to s
 openstack volume create --bootable --size 20 my-bootable-volume
 ```
 
+## Cloning a volume
+You can clone a volume using:
+```
+openstack volume create --source my-volume my-volume-clone
+```
+
 ## Transfer a volume to another project
 We will create a sample volume:
 ```
