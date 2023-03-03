@@ -30,60 +30,79 @@ These are the networks that we can create on our own so that we can deploy a VPC
 
 The traffic is isolated from other tenant networks (SDN).
 
-## CLI
-List networks:
-```
-openstack network list
-```
+### Creating a tenant network
+We can create a tenant network in the `Network > Network Topology` with the "Create Network" button:
 
-List routers:
-```
-openstack router list
-```
+![network](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-create-tenant-network-1.png?raw=true)
+![network](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-create-tenant-network-2.png?raw=true)
+![network](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-create-tenant-network-3.png?raw=true)
+![network](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-create-tenant-network-4.png?raw=true)
+![network](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-create-tenant-network-5.png?raw=true)
 
-List subnets:
-```
-openstack subnet list
-```
+At this point **this will be a private network with the traffic completely isolated from any other networks**.
 
-Show information about a given subnet:
-```
-openstack subnet show subnet-formacion-vlan-133
-```
+Specifically, the instances running in this network will be isolated at Level 2 from instances running in other networks.
 
-## Creating a tenant network
-In horizon go to network topology and create a new network (you can also do it from networks).
+## Creating a router
+To give access to the internet to the tenant network we will need a router.
 
-In the CLI we can creating a tenant network using:
-```bash
-EXTERNAL_ROUTER=router-external
-NET_NAME=net_course_1
-SUBNET_NAME=subnet_course_1
-openstack network create --mtu 1500 ${NET_NAME}
-openstack subnet create ${SUBNET_NAME} --network ${NET_NAME} --subnet-range 192.168.200.0/24 --dns-nameserver 193.144.34.209
-```
+The projects usually have already a tenant network that we created for them and this tenant network already has external access through a router named `router-external`.
 
-## Give access to the internet to the tenant network
-If you do not see the `router-external` then you have to create your own router (this consumes a public IP from the `public-default` network).
+If you see the `router-external` in your project you can use it to give external access to your new tenant networks.
 
-First you have to create a router, you can do it from network topology (or from the router the menu).
+If you do not see the `router-external` then you have to create your own router. Take into account that **this will consume a public IP from the `public-default` network**.
 
-You have to go to network topology and add a port to the gateway with the tenant network.
+To create the router we can do it from network topology and remember to set `public-default` in the "External Network" option:
 
-From the CLI:
-```
-EXTERNAL_ROUTER=router-external
-SUBNET_NAME=subnet_course_1
-openstack router add subnet ${EXTERNAL_ROUTER} ${SUBNET_NAME}
-```
+![router](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-create-router-1.png?raw=true)
+![router](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-create-router-2.png?raw=true)
+![router](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-create-router-3.png?raw=true)
 
-## Assign a specific IP
-```
-openstack server create --nic net-id=private,v4-fixed-ip=192.168.1.123 --flavor m1.micro --image cirros a
-```
+Once the router has been created, we see that it is already connected with the `public-default` network but we still have to connect our tenant network to it. For that move the mouse over the router and select "Add Interface":
+
+![connect-to-router](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-connect-network-to-router-1.png?raw=true)
+![connect-to-router](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-connect-network-to-router-2.png?raw=true)
+![connect-to-router](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-connect-network-to-router-3.png?raw=true)
+
+We can now launch an instance and select this network:
+![instance-net-course-1](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-instance-net-course-1.png?raw=true)
+![instance-net-course-1](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-instance-net-course-2.png?raw=true)
+
+## Associating a floating IP
+We will not be able to connect to the instances in our private tenant network unless we assocate a floating IP to the instance. This is a public IP that will be associated to this instance and that will allow us to connect to it.
+
+![floating-ip](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-associate-floating-ip-1.png?raw=true)
+![floating-ip](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-associate-floating-ip-2.png?raw=true)
+![floating-ip](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-associate-floating-ip-3.png?raw=true)
+![floating-ip](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-associate-floating-ip-4.png?raw=true)
+![floating-ip](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-associate-floating-ip-5.png?raw=true)
+
+Now you will able to access the instance using this public IP.
+
+NOTE: It is only possible to associate floating ips to instances that are in tenant networks with external access (ie. connected to a router with external access).
+
+IMPORTANT: Before associating a floating IP to a instance it is critical to verify the Security Group of the instance.
+
+## Associating a fixed IP (port creation)
+We can assign a fixed IP to a instance by previously creating a port. Then we can associate this port to any instance that we want, in a similar way to a floating IP.
+
+To create a port go to the `Network > Networks` view and click on the name of the network where you want to create the port:
+
+![create-port](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-create-port-1.png?raw=true)
+![create-port](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-create-port-2.png?raw=true)
+![create-port](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-create-port-3.png?raw=true)
+![create-port](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-create-port-4.png?raw=true)
+
+Then when launching a new instance we will be able to associate this port to it:
+![associate-port](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-associate-port-1.png?raw=true)
+![associate-port](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-associate-port-2.png?raw=true)
 
 ## Forwarding traffic to the internal nodes
-Use case:
+Connecting to an instance in the tenant network that has a floating ip we can jump to all the other instances in the tenant network, but sometimes this is cumbersome.
+
+One simple option to enable access to other instances it is to use iptables in the instance with the floating IP.
+
+Let's consider this scenario:
 - VM1: 192.168.200.100 and floating IP
 - VM2: 192.168.200.2
 - VM3: 192.168.200.3
@@ -100,8 +119,10 @@ Now we can connect to VM2 using:
 ```
 ssh -p 1002 cesgaxuser@<floating_ip_vm1>
 ```
-## Assign a fixed IP
-To assign a fixed ip we can use the --nic option:
-```
-openstack server create --nic net-id=net-uuid,v4-fixed-ip=ip-addr ...
-```
+
+## Deleting a tenant network and the associated router
+Follow this steps in the "Network Topology" view:
+- Verify no instances are connected to this network: ie. there are no instance icons connected to this network
+- Delete the router interfaces
+- Delete the router
+- Delete the network
