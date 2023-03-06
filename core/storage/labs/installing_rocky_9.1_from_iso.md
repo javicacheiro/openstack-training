@@ -128,13 +128,13 @@ dnf clean all
 The contextualization information is obtained from the resources inside the meta-data url using http:
 ```
 # To list all available metadata fields
-curl http://169.254.169.254/2009-04-04/meta-data
+curl http://169.254.169.254/latest/meta-data
 
 # Then we can retrieve each field with
-curl http://169.254.169.254/2009-04-04/meta-data/hostname
-curl http://169.254.169.254/2009-04-04/meta-data/local-ipv4
-curl http://169.254.169.254/2009-04-04/meta-data/public-keys/
-curl http://169.254.169.254/2009-04-04/meta-data/public-keys/0/openssh-key
+curl http://169.254.169.254/latest/meta-data/hostname
+curl http://169.254.169.254/latest/meta-data/local-ipv4
+curl http://169.254.169.254/latest/meta-data/public-keys/
+curl http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key
 ```
 
 #### Customizing cloud-init
