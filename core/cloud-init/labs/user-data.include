@@ -1,0 +1,5 @@
+#include
+# Include one url per line
+# They will be passed to urllib.urlopen so the format must be supported there
+http://bigdata.cesga.gal/files/install_vim.sh
+http://bigdata.cesga.gal/files/install_docker.sh
