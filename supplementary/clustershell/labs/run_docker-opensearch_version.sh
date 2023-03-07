@@ -46,7 +46,7 @@ OPTS+=" -e path.data=/data"
 
 # The default heap size is only 1GB
 # Don't allocate more than 32GB. Pointers blow up then because 4 bytes are no longer enough.
-OPENSEARCH_JAVA_OPTS="-Xms8g -Xmx8g"
+OPENSEARCH_JAVA_OPTS="-Xms1g -Xmx1g"
 
 # Tuning
 # The vm.max_map_count kernel setting must be set to at least 262144 for production use.
@@ -61,4 +61,4 @@ docker run $OPTS -e "OPENSEARCH_JAVA_OPTS=$OPENSEARCH_JAVA_OPTS" $VOLUMES -h $NA
 #echo "Reusing a previously stopped container: if this is not what you want edit the script"
 #docker start ${NAME}
 
-echo "Remember to start kibana in kibana vm"
+echo "Remember to start opensearch-dashboards in the dahsboards vm"
