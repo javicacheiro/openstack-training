@@ -396,3 +396,4 @@ Lab:
 Labs:
 - [Airflow installation](labs/airflow_installation)
 - [Automatic Airflow deployment (fully automated)](labs/deploy_airflow.sh)
+- [Project Lab: Installing OpenSearch in single node mode Docker](../../project-lab/opensearch/single-node-docker/installing_opensearch_single_node_docker.md)

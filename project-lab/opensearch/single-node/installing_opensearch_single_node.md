@@ -3,7 +3,7 @@ In this lab we will install OpenSearch (Elasticsearch) and OpenDashboards (Kiban
 
 Create server:
 ```
-source course-6-project-openrc.sh
+source course-1-project-openrc.sh
 
 openstack server create --boot-from-volume 20 --flavor m1.2c2m --image baseos-Rocky-8.5-v2 --key-name javicacheiro --security-group SSH opensearch-single-node
 ```

@@ -654,3 +654,5 @@ To attach the port to a VM:
 openstack server add port vm_nonet_1 my_port_1
 ```
 
+## Labs
+- [Project Lab: Installing OpenSearch in single node mode](../../project-lab/opensearch/single-node/installing_opensearch_single_node.md)
