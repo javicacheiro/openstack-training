@@ -2,8 +2,6 @@
 
 Create server:
 ```
-source course-1-project-openrc.sh
-
 openstack server create --boot-from-volume 20 --flavor m1.2c4m --image baseos-Rocky-8.5-v2 --key-name javicacheiro --security-group SSH --network provnet-formacion-vlan-133 opensearch-single-node-docker
 ```
 
