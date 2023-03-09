@@ -14,7 +14,7 @@ openstack server create --flavor a1.2c4m --image baseos-Rocky-8.5-v2 --key-name 
 
 NOTE: The **opensearch security group** is already created enabling access to:
 - egress: all
-- ingress: tcp 9200 (opensearch), tcp 5601 (opensearch-dashboards)
+- ingress: tcp 9200 (opensearch), 9200 (opensearch inter-node), tcp 5601 (opensearch-dashboards)
 
 NOTE: If you adjust the instance names you will have to **update the hostnames** (by default they get the name of the instance) for the scripts to work (alternatively you can update the scripts):
 ```

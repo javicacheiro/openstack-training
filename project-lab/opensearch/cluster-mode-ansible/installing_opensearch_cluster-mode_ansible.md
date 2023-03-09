@@ -10,7 +10,7 @@ We can launch the instances using the `provision.sh` script, you just have to ed
 
 NOTE: The **opensearch security group** is already created enabling access to:
 - egress: all
-- ingress: tcp 9200 (opensearch), tcp 5601 (opensearch-dashboards)
+- ingress: tcp 9200 (opensearch), tcp 9300 (opensearch inter-node), tcp 5601 (opensearch-dashboards)
 
 NOTE: If you adjust the instance names you will have to **update the hostnames** (by default they get the name of the instance) for the scripts to work (alternatively you can update the scripts):
 ```

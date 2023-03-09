@@ -87,12 +87,13 @@ sudo ss -ltpn
 ```
 
 Now we want to open the ports in the security group so we can connect from the VPN to opensearch dashboards and opensearch:
-- Create a security group called opensearch with tcp ports 5601 (opensearch dashboards) and 9200 (opensearch)
+- Create a security group called opensearch with tcp ports 5601 (opensearch dashboards), 9200 (opensearch) and 9300 (opensearch internal). 
   You can do it in the web or using the cli
 ```
 openstack security group create opensearch
 openstack security group rule create --ethertype IPv4 --protocol tcp --dst-port 5601 --remote-ip 0.0.0.0/0 opensearch
 openstack security group rule create --ethertype IPv4 --protocol tcp --dst-port 9200 --remote-ip 0.0.0.0/0 opensearch
+openstack security group rule create --ethertype IPv4 --protocol tcp --dst-port 9300 --remote-ip 0.0.0.0/0 opensearch
 ```
 - Associate the new security group to the instance
 ```
