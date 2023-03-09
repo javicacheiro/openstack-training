@@ -50,4 +50,4 @@ clush -l cesgaxuser -bw @compute echo OK
 
 ## Labs
 - [Installing ClusterShell](clush_installation.md)
-- [Installing Opensearch in cluster mode](labs/installing_opensearch_kibana_and_logstash_cluster-mode.md)
+- [Installing Opensearch in cluster mode](../../project-lab/opensearch/cluster-mode-clush/installing_opensearch_cluster-mode_clush.md)

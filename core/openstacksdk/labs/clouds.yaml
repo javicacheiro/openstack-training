@@ -1,0 +1,10 @@
+clouds:
+ cesga:
+   region_name: RegionOne
+   auth:
+     auth_url: 'https://cloud.srv.cesga.es:5000'
+     username: xxxx
+     password: xxxx
+     user_domain_name: hpc
+     project_name: course-1-project
+     project_domain_name: default

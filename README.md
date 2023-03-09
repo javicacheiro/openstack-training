@@ -1,4 +1,4 @@
-# openstack-training
+# Openstack Training
 OpenStack training materials
 
 Core:
@@ -14,6 +14,7 @@ Supplementary:
 - ClusterShell
 - Docker
 - Terraform
+- Ansible
 
 Project Lab:
 - OpenSearch

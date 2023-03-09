@@ -163,3 +163,8 @@ But now we should be able to connect to the 2 servers:
 
     ssh cesgaxuser@ip-address-1
     ssh cesgaxuser@ip-address-2
+
+## Cleanup
+Finally we will destroy the infrastructure with:
+
+    terraform destroy

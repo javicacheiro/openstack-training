@@ -19,7 +19,12 @@ To list the instances and their IP addresses we can run:
 openstack server list -c Name -c Networks
 ```
 
-And then we edit `/etc/hosts`:
+Or even better we can use the script we developed in the `openstacksdk` lab to export the instance list in `/etc/hosts` format:
+```
+python3 export_hosts.py
+```
+
+And then we edit `/etc/hosts` and append the information:
 ```
 sudo vim /etc/hosts
 ```

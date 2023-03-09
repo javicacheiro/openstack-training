@@ -8,7 +8,7 @@ We will focus in the official Python SDK called `openstacksdk`.
 The Python SDK is already included when we install the `openstack-cli`.
 
 ## Configuration
-We will create a yaml file called `cloud.yaml`:
+We will create a yaml file called `clouds.yaml`:
 ```
 clouds:
  cesga:
@@ -23,6 +23,13 @@ clouds:
 ```
 
 In the file we can include more than one OpenStack cloud, for that reason the file is called clouds.
+
+openstacksdk will look for this file in the following locations:
+- in the current directory
+- $HOME/.config/openstack
+- /etc/openstack
+
+You can also set the location with the environment variable `OS_CLIENT_CONFIG_FILE`.
 
 ## Using it
 The `openstacksdk` API consists of three layers:
@@ -96,14 +103,28 @@ server = conn.compute.create_server(
 
 server = conn.compute.wait_for_server(server)
 
-print("ssh -i {key} root@{ip}".format(
-    key=PRIVATE_KEYPAIR_FILE,
-    ip=server.access_ipv4))
+address = server.access_ipv4
+
 #
 # Layer 3: resource layer
 #
+# List servers
+servers = openstack.compute.v2.server.Server.list(session=conn.compute)
+
+# List images
+images = openstack.image.v2.image.Image.list(session=conn.compute)
+
+# To print the info we use the to_dict() method
+for server in servers:
+    print(server.to_dict())
+
+for image in images:
+    print(image.to_dict())
 ```
 
 ## References
 - [openstacksdk official documentation](https://docs.openstack.org/openstacksdk/xena/user/guides/intro.html)
 - [openstacksdk github repo](https://github.com/openstack/openstacksdk)
+
+## Lab
+- [Exporting openstack instance list in /etc/hosts format](labs/exporting_hosts.md)

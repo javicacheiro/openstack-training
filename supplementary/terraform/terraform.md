@@ -43,6 +43,10 @@ Inspect state
 
     terraform show
 
+Destroy infrastructure
+
+    terraform destroy
+
 NOTE: Before running apply you have to load your `openstack-rc` file.
 
 ## Evolving the infrastructure
