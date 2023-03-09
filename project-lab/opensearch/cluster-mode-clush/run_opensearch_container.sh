@@ -6,7 +6,7 @@
 NAME=$(hostname -s)
 
 # Name of the docker image to use
-VERSION="1.3.4"
+VERSION="2.6.0"
 IMAGE="opensearchproject/opensearch:$VERSION"
 
 # Mappings
@@ -14,7 +14,7 @@ declare -A ADDRESS
 ADDRESS["opensearch-1"]="10.38.28.237"
 ADDRESS["opensearch-2"]="10.38.27.170"
 ADDRESS["opensearch-3"]="10.38.28.8"
-ADDRESS["kibana"]="10.38.29.17"
+ADDRESS["dashboards"]="10.38.29.17"
 
 # Create empty data volume if needed
 mkdir /data/opensearch
@@ -32,7 +32,7 @@ OPTS+=" --net=host"
 OPTS+=" --add-host=opensearch-1:${ADDRESS['opensearch-1']}"
 OPTS+=" --add-host=opensearch-2:${ADDRESS['opensearch-2']}"
 OPTS+=" --add-host=opensearch-3:${ADDRESS['opensearch-3']}"
-OPTS+=" --add-host=kibana:${ADDRESS['kibana']}"
+OPTS+=" --add-host=dashboards:${ADDRESS['dashboards']}"
 OPTS+=" -e DOCKER_FIX=''"
 OPTS+=" -e cluster.name=opensearch-cesga-dev"
 OPTS+=" -e node.name=$NAME"
@@ -61,4 +61,4 @@ docker run $OPTS -e "OPENSEARCH_JAVA_OPTS=$OPENSEARCH_JAVA_OPTS" $VOLUMES -h $NA
 #echo "Reusing a previously stopped container: if this is not what you want edit the script"
 #docker start ${NAME}
 
-echo "Remember to start opensearch-dashboards in the dahsboards vm"
+echo "Once the opensearch cluster has booted remember to start opensearch-dashboards in the dahsboards instance"

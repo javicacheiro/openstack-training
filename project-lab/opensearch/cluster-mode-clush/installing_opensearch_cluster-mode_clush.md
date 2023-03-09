@@ -1,9 +1,30 @@
 # Installing an OpenSearch cluster
 
 ## Provisioning
-We will be creating 4 instances.
+We will be need 4 instances.
 
-You can use horizon with **count 3**:
+We can launch them using something like:
+```
+for n in {1..3}; do
+    openstack server create --flavor a1.2c4m --image baseos-Rocky-8.5-v2 --key-name javicacheiro --security-group SSH --security-group opensearch --network provnet-formacion-vlan-133 opensearch-$n
+done
+
+openstack server create --flavor a1.2c4m --image baseos-Rocky-8.5-v2 --key-name javicacheiro --security-group SSH --network provnet-formacion-vlan-133 dashboards
+```
+
+NOTE: The **opensearch security group** is already created enabling access to:
+- egress: all
+- ingress: tcp 9200 (opensearch), tcp 5601 (opensearch-dashboards)
+
+NOTE: If you adjust the instance names you will have to **update the hostnames** (by default they get the name of the instance) for the scripts to work (alternatively you can update the scripts):
+```
+hostnamectl set-hostname opensearch-1
+```
+
+In future versions of the `openstack-cli` there will be the option to configure the instance hostname:
+- [Configurable instance hostnames](https://specs.openstack.org/openstack/nova-specs/specs/xena/implemented/configurable-instance-hostnames.html)
+
+Alternatively you can also launch the instances using horizon, it is very simple because we can use **count 3** for the opensearch cluster instances:
 - Compute -> Instances: Launch Instance:
   - Instance Name: `opensearch`
   - Count: 3
@@ -12,20 +33,8 @@ You can use horizon with **count 3**:
   - Networks: provnet-formacion-vlan-133
   - Security Groups: **opensearch**, SSH
   - Key Pair: your imported key pair
-- Launch another instance and name it `kibana`
 
-You can also launch them with `openstack-cli` using something like:.
-```
-for n in {1..3}; do
-    openstack server create --flavor a1.2c4m --image baseos-Rocky-8.5-v2 --key-name javicacheiro --security-group SSH --security-group opensearch --network provnet-formacion-vlan-133 opensearch-$n
-done
-
-openstack server create --flavor a1.2c4m --image baseos-Rocky-8.5-v2 --key-name javicacheiro --security-group SSH --network provnet-formacion-vlan-133 kibana
-```
-
-NOTE: The **opensearch security group** is already created enabling access to:
-- egress: all
-- ingress: tcp 9200 (opensearch), tcp 5601 (opensearch-dashboards)
+Additionaly we will launch another instance and name it `dashboards`.
 
 ## Configuration
 Add the vm instances to your `/etc/hosts` and to the `/etc/hosts` of the remote servers:
@@ -34,7 +43,7 @@ Add the vm instances to your `/etc/hosts` and to the `/etc/hosts` of the remote 
 1.2.3.4 opensearch-1 opensearch-1.novalocal
 1.2.3.4 opensearch-2 opensearch-2.novalocal
 1.2.3.4 opensearch-3 opensearch-3.novalocal
-1.2.3.4 kibana kibana.novalocal
+1.2.3.4 dashboards dashboards.novalocal
 ```
 
 Now we can proceed:
@@ -55,8 +64,8 @@ clush -l cesgaxuser -bw opensearch-[1-3] sudo reboot
 
 Edit `run_docker-opensearch_version.sh` and set the right IP addresses for the nodes. Then upload it to the nodes and run it:
 ```
-clush -l cesgaxuser -bw opensearch-[1-3] --copy run_docker-opensearch_version.sh --dest /home/cesgaxuser
-clush -l cesgaxuser -bw opensearch-[1-3] sudo /home/cesgaxuser/run_docker-opensearch_version.sh
+clush -l cesgaxuser -bw opensearch-[1-3] --copy run_opensearch_container.sh --dest /home/cesgaxuser
+clush -l cesgaxuser -bw opensearch-[1-3] sudo /home/cesgaxuser/run_opensearch_container.sh
 clush -l cesgaxuser -bw opensearch-[1-3] sudo docker ps
 ```
 
@@ -77,17 +86,15 @@ http --verify no --auth admin:admin 'https://opensearch-1:9200/_cat/health?v&pre
 ## Opensearch Dashboards (Kibana)
 Once opensearch has started we can start opensearch dashboards (ie. **kibana**).
 
-You will have to edit the `run_kibana-opensearch_version.sh` to point to the right opensearch instance addresses:
+You will have to edit the `run_opensearch_dashboards_container.sh` to point to the right opensearch instance addresses:
 ```
-clush -l cesgaxuser -bw kibana --copy run_kibana-opensearch_version.sh --dest /home/cesgaxuser
-clush -l cesgaxuser -bw kibana sudo /home/cesgaxuser/run_kibana-opensearch_version.sh
+clush -l cesgaxuser -bw dashboards --copy run_opensearch_dashboards_container.sh --dest /home/cesgaxuser
+clush -l cesgaxuser -bw dashboards sudo /home/cesgaxuser/run_opensearch_dashboards_container.sh
 ```
 
-Go to kibana:
+Go to opensearch dashboards:
 
-    http://kibana:5601
-
-NOTE: Be careful because kibana by default would resolve to kibana.service.int.cesga.es (the production one)
+    http://dashboards:5601
 
 credentials are: admin/admin
 
@@ -97,7 +104,7 @@ To destroy the running cluster:
 clush -l cesgaxuser -bw opensearch-[1-3] 'sudo docker rm -f $(hostname -s)'
 clush -l cesgaxuser -bw opensearch-[1-3] sudo rm -rf /data/opensearch
 
-clush -l cesgaxuser -bw kibana sudo docker rm -f kibana
+clush -l cesgaxuser -bw dashboards sudo docker rm -f dashboards
 ```
 
 Finally delete the nodes:
