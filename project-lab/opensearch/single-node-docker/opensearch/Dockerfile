@@ -17,6 +17,6 @@ WORKDIR /usr/share/opensearch
 
 VOLUME /data
 
-EXPOSE 9200
+EXPOSE 9200 9300
 
 CMD ["/usr/share/opensearch/bin/opensearch"]
