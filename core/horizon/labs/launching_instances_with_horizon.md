@@ -14,7 +14,7 @@ Follow these steps:
     - Count: 2
   - Source: Choose the source image: baseos-Rocky-8.5-v2
   - Networks: Choose an existing provider network (`provnet`)
-  - Flavor: m1.1c2m (1 VCPU, 2GB RAM)
+  - Flavor: a1.1c1m (1 VCPU, 1GB RAM)
   - Security Groups: select the security group you created
   - Key Pair: select your key pair
 - Look at the "IP Address" and connect to each instance
