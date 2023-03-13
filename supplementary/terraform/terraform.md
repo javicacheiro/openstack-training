@@ -72,6 +72,7 @@ The process to follow is the following:
 
 ## Lab
 - [Using terraform_basics](labs/using_terraform_basics)
+- [Real use case: rancher (kubernetes deployment tool)](https://github.com/rancher/quickstart/tree/master/rancher)
 
 ## References:
 - https://learn.hashicorp.com/tutorials/terraform/aws-change?in=terraform/aws-get-started
