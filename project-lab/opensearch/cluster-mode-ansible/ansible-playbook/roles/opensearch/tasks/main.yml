@@ -39,6 +39,13 @@
     update_cache: True
     state: present
 
+- name: Useful packages
+  package:
+    name:
+      - bash-completion
+      - vim-enhanced
+    state: present
+
 - name: jvm.options config file
   template:
     src: jvm.options.j2
@@ -57,21 +64,13 @@
     mode: u=rw,g=r,o=r
   notify: restart opensearch
 
-#- name: opensearch.service
-#  copy:
-#    src: opensearch.service
-#    dest: /usr/lib/systemd/system/opensearch.service
-#    owner: opensearch
-#    group: opensearch
-#    mode: u=rw,g=r,o=r
-#  notify: restart opensearch
-
-- name: LimitMEMLOCK included in opensearch.service
-  lineinfile:
-    path: /usr/lib/systemd/system/opensearch.service
-    regexp: '^LimitMEMLOCK'
-    line: LimitMEMLOCK=infinity
-    state: present
+- name: opensearch.service
+  copy:
+    src: opensearch.service
+    dest: /usr/lib/systemd/system/opensearch.service
+    owner: opensearch
+    group: opensearch
+    mode: u=rw,g=r,o=r
   notify: restart opensearch
 
 - name: Make sure opensearch is running and enabled
