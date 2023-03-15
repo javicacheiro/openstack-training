@@ -23,7 +23,7 @@ or we can pass it as a command-line option:
 ```
 
 ## Playbook
-The configuration to apply is defined in a file called a `playbook`.
+The configuration to apply is defined in a file called a **playbook** and it is composed of plays and each **play** applies **tasks** or **roles** to a given group of **hosts**.
 
 The following is a sample playbook for opensearch:
 ```yaml
@@ -41,6 +41,10 @@ The following is a sample playbook for opensearch:
   roles:
     - { role: linux/dashboards }
 ```
+
+All these files are written in YAML so it is good to understand the syntax:
+- [YAML Syntax Reference](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html)
+
 # Facts
 Facts represent discovered variables about a system that can be used in playbooks to perform conditional actions.
 
@@ -97,4 +101,16 @@ To show the differences use --diff:
 
     ansible-playbook management.yml --extra-vars target=mngt0-1,mngt0-2 --tags=slurm --check --diff
 
+## Modules reference
+To create our tasks it is always useful to have at hand the documentation of the modules and plugins contained in ansible-core:
+- [Builtin modules reference](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/index.html)
+
+We can also check the documentation of any module using the `ansible-doc` CLI:
+```
+# List all modules
+ansible-doc -l
+
+# Get help about the blockinfile module
+ansible-doc blockinfile
+```
 
