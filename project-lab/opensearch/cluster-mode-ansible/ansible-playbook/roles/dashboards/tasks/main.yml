@@ -41,19 +41,13 @@
     mode: u=rw,g=r,o=r
   notify: restart opensearch-dashboards
 
-# Needed to connect to a non secure opensearch cluster
-#- name: list installed plugins
-#  command: sudo -u opensearch-dashboards /usr/share/opensearch-dashboards/bin/opensearch-dashboards-plugin list
-#  register: installed_plugins
-#  changed_when: False
-#  ignore_errors: yes
-
 - name: security plugin removed
-  command: sudo -u opensearch-dashboards /usr/share/opensearch-dashboards/bin/opensearch-dashboards-plugin remove securityDashboards
-  removes: /usr/share/opensearch-dashboards/plugins/securityDashboards/
-#  when: "securityDashboards in installed_plugins.stdout"
-#  changed_when: "'Plugin [securityDashboards] is not installed' not in starthttpdout.stdout"
-#  notify: restart opensearch-dashboards
+  command: "/usr/share/opensearch-dashboards/bin/opensearch-dashboards-plugin remove securityDashboards"
+  become: yes
+  become_user: opensearch-dashboards
+  args:
+    removes: /usr/share/opensearch-dashboards/plugins/securityDashboards/
+  notify: restart opensearch-dashboards
 
 - name: Make sure opensearch is running and enabled
   systemd:
