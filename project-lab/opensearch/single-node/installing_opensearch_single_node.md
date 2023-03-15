@@ -5,7 +5,7 @@ Create server:
 ```
 source course-1-project-openrc.sh
 
-openstack server create --boot-from-volume 20 --flavor m1.2c2m --image baseos-Rocky-8.5-v2 --key-name javicacheiro --security-group SSH opensearch-single-node
+openstack server create --boot-from-volume 20 --flavor m1.2c4m --image baseos-Rocky-8.5-v2 --key-name javicacheiro --security-group SSH opensearch-single-node
 ```
 
 Update it with latest security fixes:
@@ -29,6 +29,8 @@ sudo yum repolist
 sudo yum list opensearch --showduplicates
 # Install opensearch
 sudo yum install -y 'opensearch-2.5.0'
+# Additional useful packages
+sudo yum install -y bash-completion vim-enhanced
 
 # Start opensearch (it takes some time)
 sudo systemctl start opensearch
@@ -58,6 +60,20 @@ sudo vi /etc/opensearch/jvm.options
 sudo systemctl restart opensearch
 ```
 
+Test that it is working (now using the instance address):
+```
+curl -X GET -u admin:admin --silent --insecure https://<address>:9200
+```
+
+We can also list the indices and nodes in the cluster (in this case only one):
+```
+# List indices
+curl -X GET -u admin:admin --silent --insecure https://<address>:9200/_cat/indices?v
+
+# List nodes
+curl -X GET -u admin:admin --silent --insecure https://<address>:9200/_cat/nodes?v
+```
+
 ## Opensearch Dashboards
 ```
 sudo curl -SL https://artifacts.opensearch.org/releases/bundle/opensearch-dashboards/2.x/opensearch-dashboards-2.x.repo -o /etc/yum.repos.d/opensearch-dashboards-2.x.repo
@@ -69,7 +85,7 @@ sudo systemctl enable opensearch-dashboards
 
 Test installation:
 ```
-curl -L -X GET http://localhost:5601
+curl -L -X GET --silent http://localhost:5601
 ```
 
 Enable outside connectivity:
