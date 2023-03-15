@@ -1,0 +1,82 @@
+---
+- name: vm.max_map_count is set in sysctl.conf
+  sysctl:
+    name: vm.max_map_count
+    value: '262144'
+    state: present
+  tags:
+    - tune
+
+- name: fs.file-max is set in sysctl.conf
+  sysctl:
+    name: fs.file-max
+    value: '65536'
+    state: present
+  tags:
+    - tune
+
+- name: Nodes are included in /etc/hosts
+  blockinfile:
+    dest: /etc/hosts
+    block: |-
+      {% for host in groups['all'] %}
+      {{ hostvars[host]['ansible_host'] }} {{ host }}.{{ domain_name }} {{ host }}
+      {% endfor %}
+    state: present
+    backup: yes
+  when: include_in_etc_hosts
+
+- name: opensearch repo is added
+  copy:
+    src: opensearch-2.x.repo
+    dest: /etc/yum.repos.d/opensearch-2.x.repo
+
+- name: Opensearch is installed
+  package:
+    name:
+      - "opensearch-{{ os_version }}"
+      - bash-completion
+    update_cache: True
+    state: present
+
+- name: jvm.options config file
+  template:
+    src: jvm.options.j2
+    dest: /etc/opensearch/jvm.options
+    owner: opensearch
+    group: opensearch
+    mode: u=rw,g=r,o=r
+  notify: restart opensearch
+
+- name: opensearch.yml config file
+  template:
+    src: opensearch.yml.j2
+    dest: /etc/opensearch/opensearch.yml
+    owner: opensearch
+    group: opensearch
+    mode: u=rw,g=r,o=r
+  notify: restart opensearch
+
+#- name: opensearch.service
+#  copy:
+#    src: opensearch.service
+#    dest: /usr/lib/systemd/system/opensearch.service
+#    owner: opensearch
+#    group: opensearch
+#    mode: u=rw,g=r,o=r
+#  notify: restart opensearch
+
+- name: LimitMEMLOCK included in opensearch.service
+  lineinfile:
+    path: /usr/lib/systemd/system/opensearch.service
+    regexp: '^LimitMEMLOCK'
+    line: LimitMEMLOCK=infinity
+    state: present
+  notify: restart opensearch
+
+- name: Make sure opensearch is running and enabled
+  systemd:
+    name: opensearch
+    state: started
+    enabled: yes
+    daemon_reload: true

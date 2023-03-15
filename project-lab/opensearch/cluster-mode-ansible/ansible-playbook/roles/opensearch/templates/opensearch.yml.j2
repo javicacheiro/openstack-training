@@ -1,0 +1,11 @@
+cluster.name: "{{ cluster_name }}"
+node.name: "{{ inventory_hostname }}"
+network.host: 0.0.0.0
+bootstrap.memory_lock: true
+discovery.seed_hosts: ["{{ os_nodes }}"]
+cluster.initial_cluster_manager_nodes: ["{{ os_manager_nodes }}"]
+node.roles: [{{ hostvars[inventory_hostname]['os_roles'] }}]
+path.data: /var/lib/opensearch
+path.logs: /var/log/opensearch
+# For testing disable the security plugin 
+plugins.security.disabled: true

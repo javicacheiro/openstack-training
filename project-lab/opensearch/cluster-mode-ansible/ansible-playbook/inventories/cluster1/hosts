@@ -1,0 +1,29 @@
+# Inventory aliases
+os1 ansible_host=10.133.28.78
+os2 ansible_host=10.133.28.86
+os3 ansible_host=10.133.27.183
+os4 ansible_host=10.133.29.84
+os5 ansible_host=10.133.27.218
+
+dashboards1 ansible_host=10.133.27.132
+
+#
+# Opensearch hosts
+#
+# List three nodes elegible for cluster managers (they will also act as data nodes)
+[control]
+os1
+os2
+os3
+# Additional data nodes
+[data]
+os4
+os5
+
+[opensearch:children]
+control
+data
+
+# Opensearch Dashboards hosts
+[dashboards]
+dashboards1

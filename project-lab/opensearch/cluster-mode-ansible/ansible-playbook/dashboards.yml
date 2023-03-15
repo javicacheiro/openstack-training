@@ -1,0 +1,6 @@
+---
+- name: Deploy opensearch-dashboards
+  hosts: dashboards
+  gather_facts: true
+  roles:
+    - dashboards

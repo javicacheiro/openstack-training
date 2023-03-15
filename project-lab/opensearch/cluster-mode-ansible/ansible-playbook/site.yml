@@ -1,0 +1,4 @@
+---
+
+- import_playbook: opensearch.yml
+- import_playbook: dashboards.yml

@@ -1,0 +1,8 @@
+---
+include_in_etc_hosts: true
+
+os_port: 9200
+os_nodes: |-
+        {% for host in groups['opensearch'] -%}
+          http://{{ host }}:{{ os_port }}{% if not loop.last %}","{% endif %}
+        {%- endfor %}

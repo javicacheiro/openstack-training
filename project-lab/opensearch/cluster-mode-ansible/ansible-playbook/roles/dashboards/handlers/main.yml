@@ -1,0 +1,5 @@
+---
+- name: restart opensearch-dashboards
+  systemd:
+    name: opensearch-dashboards
+    state: restarted

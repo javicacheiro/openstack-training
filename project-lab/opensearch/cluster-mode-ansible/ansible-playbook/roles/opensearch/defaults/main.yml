@@ -1,0 +1,12 @@
+---
+include_in_etc_hosts: true
+
+os_manager_nodes: |-
+        {% for host in groups['control'] -%}
+          {{ host }}{% if not loop.last %}","{% endif %}
+        {%- endfor %}
+
+os_nodes: |-
+        {% for host in groups['opensearch'] -%}
+          {{ host }}{% if not loop.last %}","{% endif %}
+        {%- endfor %}

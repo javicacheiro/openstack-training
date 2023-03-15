@@ -1,0 +1,6 @@
+---
+- name: Deploy opensearch
+  hosts: opensearch
+  gather_facts: true
+  roles:
+    - opensearch

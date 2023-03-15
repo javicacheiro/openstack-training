@@ -1,0 +1,14 @@
+# Name of the cluster
+cluster_name: testing-cluster
+
+# opensearch version
+os_version: "2.5.0"
+
+# Domain name
+domain_name: novalocal
+
+# Cluster type whether its single-node or multi-node
+cluster_type: multi-node
+
+# JVM memory heap size in GB for opensearch
+jvm_heap_size: 2
