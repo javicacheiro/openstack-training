@@ -35,7 +35,6 @@
   package:
     name:
       - "opensearch-{{ os_version }}"
-      - bash-completion
     update_cache: True
     state: present
 
