@@ -83,7 +83,7 @@ For that just use the standard launch instance wizard with:
 - Source:
   - Select Boot Source: Instance Snapshot
   - Select your system volume snapshot: `<username>-storage-lab-snap-1`
-- Flavor: m1.1c2m
+- Flavor: m1.1c1m
 - Networks: provnet-formacion-vlan-133
 - Securiry groups: SSH
 - Key Pair: your keypair
