@@ -69,10 +69,9 @@ For example use the following selections (for a basic installation):
 ![rocky](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-rocky-installation-1.png?raw=true)
 ![rocky](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-rocky-installation-2.png?raw=true)
 ![rocky](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-rocky-installation-3.png?raw=true)
+![rocky](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-rocky-installation-6.png?raw=true)
 ![rocky](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-rocky-installation-4.png?raw=true)
 ![rocky](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-rocky-installation-5.png?raw=true)
-![rocky](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-rocky-installation-6.png?raw=true)
-![rocky](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-rocky-installation-7.png?raw=true)
 ![rocky](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-rocky-installation-8.png?raw=true)
 
 ## Delete the instance
