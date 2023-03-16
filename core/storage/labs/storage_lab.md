@@ -1,9 +1,9 @@
 # Storage lab
-## Create a instance
+## Create an instance
 Create a new instance:
 - Name: `<username>-storage-lab`
 - Source: baseos-Rocky-8.5-v2
-- Flavor: m1.1c2m
+- Flavor: m1.1c1m
 - Networks: provnet-formacion-vlan-133
 - Securiry groups: SSH
 - Key Pair: your keypair
@@ -37,7 +37,7 @@ To do a clean snapshot we will stop the instance.
 - Option 1: `sudo shutdown -h now`
 - Option 2: "Shut Off instance" in the instance options menu
 
-## Detattch the volume
+## Dettach the volume
 To do a clean snapshot we will detattach the data volume first (in the volume options: "Manage Attachments").
 
 ## Create a snapshot of the instance
@@ -71,7 +71,7 @@ sudo touch /data/step_2_completed
 ```
 
 ## Starting a new instance from the snapshot
-### Converting the data volume snapshot in a normal volume
+### Converting the data volume snapshot into a normal volume
 First we will convert the data volume snapshot into a normal volume:
 - `Volumes > Snapshots`: in the snapshot options select "Create Volume" (use the default name)
 

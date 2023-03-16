@@ -24,7 +24,6 @@ In this lesson we will learn how to:
 - Booting from a snapshot
 - Shutting down an instance and starting it later
 - Persistent instance vs ephemeral instance
-- Starting from a snapshot
 
 ## Images
 Under `Compute > Images` you can see the existing images.
@@ -178,7 +177,7 @@ It is important to understand the distinction between ephemeral storage and pers
 - Persistent storage: The disk associated with the VM appears as a volume and it is not deleted when the VM is deleted. **You have to remember to delete it manually when needed.**
 
 ## Booting instance options
-There are different options for booting that will define how storage is allocated to the new instance.
+There are different options for booting that will define how storage is allocated to the new instance and from where the main disk of the instance will be created.
 
 These options are presented in horizon in the `Source` tab of the launch instance wizard:
 
