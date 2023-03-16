@@ -101,16 +101,90 @@ To show the differences use --diff:
 
     ansible-playbook management.yml --extra-vars target=mngt0-1,mngt0-2 --tags=slurm --check --diff
 
-## Modules reference
-To create our tasks it is always useful to have at hand the documentation of the modules and plugins contained in ansible-core:
-- [Builtin modules reference](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/index.html)
-
-We can also check the documentation of any module using the `ansible-doc` CLI:
+## ansible-doc
+We can also check the documentation of any module or plugin using the `ansible-doc` CLI:
 ```
 # List all modules
-ansible-doc -l
+ansible-doc -t module -l
 
 # Get help about the blockinfile module
+ansible-doc -t module blockinfile
+
+# Or since module is the defaul type we could just use
+ansible-doc -l
 ansible-doc blockinfile
+
+# Get a list of all lookup plugins
+ansible-doc -t lookup -l
+
+# Get help of the csvfile lookup plugin
+ansible-doc -t lookup csvfile
 ```
 
+# Most useful modules
+These are some examples or the most useful modules:
+
+- package: to make sure certain packages are installed
+```
+- name: Useful packages
+  package:
+    name:
+      - bash-completion
+      - vim-enhanced
+    state: present
+```
+
+- copy: to make sure a given file is present and with the expected content
+```
+- name: opensearch repo is added
+  copy:
+    src: opensearch-2.x.repo
+    dest: /etc/yum.repos.d/opensearch-2.x.repo
+```
+
+- template: to make sure a given file is present and with the expected content (generated from a template)
+```
+- name: opensearch.yml config file
+  template:
+    src: opensearch.yml.j2
+    dest: /etc/opensearch/opensearch.yml
+    owner: opensearch
+    group: opensearch
+    mode: u=rw,g=r,o=r
+  notify: restart opensearch
+```
+
+- systemd or service: to make sure a service is running
+```
+- name: Make sure opensearch is running and enabled
+  systemd:
+    name: opensearch
+    state: started
+    enabled: yes
+    daemon_reload: true
+```
+
+- command: to run a given command
+```
+- name: security plugin removed
+  command: "/usr/share/opensearch-dashboards/bin/opensearch-dashboards-plugin remove securityDashboards"
+  become: yes
+  become_user: opensearch-dashboards
+  args:
+    removes: /usr/share/opensearch-dashboards/plugins/securityDashboards/
+  notify: restart opensearch-dashboards
+```
+
+## Reference
+To create our tasks it is especially useful to have at hand the documentation of the modules and plugins contained in ansible-core:
+- [Builtin modules reference](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/index.html)
+
+Other useful references:
+- [Ansible cheat-sheet](https://github.com/cherkavi/cheat-sheet/blob/master/ansible.md)
+- [Using Ansible playbooks](https://docs.ansible.com/ansible/latest/playbook_guide/index.html)
+- [Playbook Keywords](https://docs.ansible.com/ansible/latest/reference_appendices/playbooks_keywords.html)
+- [Index of all modules and plugins](https://docs.ansible.com/ansible/latest/collections/all_plugins.html#all-modules-and-plugins)
+
+
+## Lab
+- [Project Lab: Deploying Opensearch in cluster mode with ansible](../../project-lab/opensearch/cluster-mode-ansible/installing_opensearch_cluster-mode_ansible.md)
