@@ -40,13 +40,13 @@ To do a clean snapshot we will stop the instance.
 ## Dettach the volume
 To do a clean snapshot we will detattach the data volume first (in the volume options: "Manage Attachments").
 
-## Create a snapshot of the instance
-Under the instance options select "Create Snapshot", this will create a snapshot of the system volume of the instance.
-- Name: `<username>-storage-lab-snap-1`
-
 ## Create a snapshot of the data volume
 Create a snapshot of the volume:
 - Name: `<username>-storage-lab-data-snap-1`
+
+## Create a snapshot of the instance
+Under the instance options select "Create Snapshot", this will create a snapshot of the system volume of the instance.
+- Name: `<username>-storage-lab-snap-1`
 
 ## Verify that both snapshots have been created
 Go to `Volumes > Snapshots` and verify that the snapshots have been created.
