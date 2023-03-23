@@ -60,7 +60,7 @@ It is also possible to use the cloud-init `make-mime` subcommand to generate a M
 - `cloud-config`: yaml file containing the cloud-init configuration
 - `x-shellscript`: the script we want to run
 
-For the most recent versions of cloud-init (`>=22.1`) it is also possible to specify different scripts depending on when we want them to be run:From version 
+For the most recent versions of cloud-init (`>=22.1`) it is also possible to specify different scripts depending on when we want them to be run:
 - `x-shellscript-per-instance`: the script will be only run the first time the instance boots
 - `x-shellscript-per-boot`: the script will be run each time the instance boots
 - `x-shellscript-per-once`: the script will be run only once

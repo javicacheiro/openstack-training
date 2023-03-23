@@ -15,7 +15,6 @@ You can check in which format it is the image using the `file` command:
 cirros-0.6.1-x86_64-disk.img: QEMU QCOW Image (v3), 117440512 bytes
 ```
 
-
 ## Convert from qcow2 to raw for ceph
 To do the conversion we will use the `qemu-img` tool. First we have to install it:
 ```
