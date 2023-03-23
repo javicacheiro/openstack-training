@@ -212,95 +212,6 @@ Uploading an existing public key:
 openstack keypair create --public-key ~/.ssh/id_rsa.pub my-second-key
 ```
 
-## Booting instance options (persistent or non-persistent storage)
-There are different options for booting a server:
-
-- Create server from image. No volume is created, data will be deleted when the server is deleted.
-```
-openstack server create --image <image>
-
-openstack server create --flavor m1.1c1m --image cirros-0.6.1 --key-name javicacheiro --security-group SSH vm-from-image
-```
-
-- Create a volume of the given size from a image and use it as boot disk. The volume will be kept when the server is deleted.
-```
-openstack server create --boot-from-volume <volume-size> --image <image>
-
-openstack server create --boot-from-volume 10 --flavor m1.1c1m --image cirros-0.6.1 --key-name javicacheiro --security-group SSH vm-from-image-and-boot-from-volume-option
-```
-
-- Boot from an existing volume
-```
-openstack server create --volume <volume> ...
-
-openstack server create --volume 5d62e119-c607-4e43-a599-4262283c6139 --flavor m1.1c2m --key-name javicacheiro --security-group SSH vm-from-volume
-```
-
-- Boot from snapshot
-openstack server create --snapshot <snapshot>
-
-- Ephemeral: Create and attach a local ephemeral block device.
-  - Data is lost when the instance is deleted
-  - It does not allow live migration so it is not recommended
-  - In our case the ephemeral disk is not created in the local node but also in ceph in a dedicated pool. This avoids that a local disk failure causes the instance to fail.
-  - By default our flavors do not allow the creation of ephemeral storage (limit set to 0)
-
-```
-openstack server create --ephemeral size=<size> --image <image> ...
-openstack server create --ephemeral 5 --image cirros-0.6.1 --flavor m1.1c1m --key-name javicacheiro --security-group SSH vm-ephemeral
-```
-
-Ephemeral VMs are stored in a dedicated ceph pool called "ephemeral-vms"
-```
-c27-17
-/usr/libexec/qemu-kvm -name guest=instance-0000d21b,debug-threads=on ... -blockdev {"driver":"rbd","pool":"ephemeral-vms","image":"4689e7a4-e3ac-49b5-b790-17a70b6b5026_disk"
-...
-[root@c26-1 ~]# rbd ls --pool ephemeral-vms | grep 4689e7a4-e3ac-49b5-b790-17a70b6b5026_disk
-4689e7a4-e3ac-49b5-b790-17a70b6b5026_disk
-[root@c26-1 ~]# rbd info --pool ephemeral-vms 4689e7a4-e3ac-49b5-b790-17a70b6b5026_disk
-rbd image '4689e7a4-e3ac-49b5-b790-17a70b6b5026_disk':
-        size 40 GiB in 5120 objects
-        order 23 (8 MiB objects)
-        snapshot_count: 0
-        id: 82379d9caf8d67
-        block_name_prefix: rbd_data.82379d9caf8d67
-        format: 2
-        features: layering, exclusive-lock, object-map, fast-diff, deep-flatten
-        op_features:
-        flags:
-        create_timestamp: Thu Jan 19 18:15:04 2023
-        access_timestamp: Mon Jan 30 18:25:33 2023
-        modify_timestamp: Mon Jan 30 18:25:02 2023
-        parent: glance-images/61450471-1d15-48ca-af2a-8476cd54b7d8@snap
-        overlap: 2 GiB
-
-```
-```
-[root@c26-1 ~]# rbd info --pool cinder-volumes volume-8b4f70c7-5fca-430c-8788-0dc5ea0063ac
-rbd image 'volume-8b4f70c7-5fca-430c-8788-0dc5ea0063ac':
-        size 40 GiB in 5120 objects
-        order 23 (8 MiB objects)
-        snapshot_count: 0
-        id: 67f6347ace15bb
-        block_name_prefix: rbd_data.67f6347ace15bb
-        format: 2
-        features: layering, exclusive-lock, object-map, fast-diff, deep-flatten
-        op_features:
-        flags:
-        create_timestamp: Mon Jan 16 20:58:48 2023
-        access_timestamp: Wed Jan 18 21:30:09 2023
-        modify_timestamp: Wed Jan 18 21:30:09 2023
-        parent: glance-images/6f1c382c-e361-46e6-ae41-305e93c67140@snap
-        overlap: 2 GiB
-```
-
-NOTE: If you keep instances in shutoff state the hypervisor continues to reserve its resources for when it is started again. Also in the case of ephemeral images the volume is kept.
-
-
-- user-data: User data file to serve from the metadata server
-- file: File(s) to inject into image before boot (repeat to set multiple files)
-
-
 ## Security group creation
 
 ```
@@ -313,12 +224,12 @@ openstack security group show ssh
 
 We have to add the additional rule to allow **ingress** ssh traffic:
 ```
-openstack security group rule create --protocol tcp --dst-port 22:22 --remote-ip 0.0.0.0/0 ssh
+openstack security group rule create --ingress --protocol tcp --dst-port 22:22 --remote-ip 0.0.0.0/0 ssh
 ```
 
 We can also allow icmp for ping:
 ```
-openstack security group rule create --protocol icmp --remote-ip 0.0.0.0/0 ssh
+openstack security group rule create --ingress --protocol icmp --remote-ip 0.0.0.0/0 ssh
 ```
 
 This is the final result:
@@ -369,20 +280,6 @@ To force backup of an in-use volume (not recommened):
 ```
 openstack volume backup create --force --name mariadb-data-backup-2 mariadb-data
 ```
-
-## Downloading a image locally
-We can download a image
-```
-openstack image save --file cirros.img cirros
-```
-
-The downloaded image format will depend on the format of the source image, we can see the format of a given file with:
-```
-[cesgaxuser@openstack-cli tmp]$ file cirros.img
-cirros.img: QEMU QCOW Image (v3), 117440512 bytes
-```
-
-Unfortunately we can not currently download a volume, but we can convert it to an image and then download it.
 
 ## Adding resources to a server
 We can add resources (floating ip, volume, security group, network, port) to an existing server.
@@ -475,6 +372,20 @@ From this moment the image will be appear listed in the collaborator's project.
 If you want to unshare the image use:
 
     openstack image remove project --project-domain default cirros bigdata
+
+## Downloading an image
+We can download an image
+```
+openstack image save --file cirros.img cirros
+```
+
+The downloaded image format will depend on the format of the source image, we can see the format of a given file with:
+```
+[cesgaxuser@openstack-cli tmp]$ file cirros.img
+cirros.img: QEMU QCOW Image (v3), 117440512 bytes
+```
+
+Unfortunately we can not currently download a volume, but we can convert it to an image and then download it.
 
 ## Creating a volume from a image
 We can create a volume from an image with:
