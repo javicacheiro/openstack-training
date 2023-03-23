@@ -1,17 +1,42 @@
 #!/bin/bash
 
-SERVER_NAME="airflow"
+PREFIX="curso800"
+SERVER_NAME="${PREFIX}-airflow"
 DATA_VOLUME="airflow-data"
 IMAGE="baseos-Rocky-8.5-v2"
 NETWORK="provnet-formacion-vlan-133"
 FLAVOR="m1.1c2m"
-KEYPAIR="admin"
+KEYPAIR="${PREFIX}-airflow-admin"
 SECGROUP="airflow"
+
+echo "Checking if jq is installed"
+if which jq &> /dev/null; then
+    echo "jq is already installed"
+else
+    echo "Installing jq"
+    sudo dnf -y install jq
+fi
+
+echo "SSH Key Generation"
+if [[ -e ~/.ssh/id_rsa ]]; then
+    echo "Using existing key"
+else
+    echo "Generating SSH Key"
+    ssh-keygen -t rsa -b 4096 -N '' -f ~/.ssh/id_rsa
+fi
+
+echo "Disable strict Host Key checking"
+if [[ -e ~/.ssh/config ]]; then
+    echo "Existing configuration file so it will not be modified"
+    echo "Please verify that StrictHostKeyChecking is disabled"
+else
+    echo "StrictHostKeyChecking no" >> ~/.ssh/config
+fi
 
 echo "Keypair configuration"
 if ! openstack keypair show $KEYPAIR &> /dev/null; then
     echo "Registering key pair"
-    openstack keypair create --public-key ~/.ssh/id_rsa.pub admin
+    openstack keypair create --public-key ~/.ssh/id_rsa.pub "${PREFIX}-airflow-admin"
 fi
 
 echo "Security group configuration"
