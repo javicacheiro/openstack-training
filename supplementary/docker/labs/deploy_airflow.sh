@@ -11,37 +11,37 @@ SECGROUP="airflow"
 
 echo "Checking if jq is installed"
 if which jq &> /dev/null; then
-    echo "jq is already installed"
+    echo "-> jq is already installed"
 else
-    echo "Installing jq"
+    echo "-> Installing jq"
     sudo dnf -y install jq
 fi
 
 echo "SSH Key Generation"
 if [[ -e ~/.ssh/id_rsa ]]; then
-    echo "Using existing key"
+    echo "-> Using existing key"
 else
-    echo "Generating SSH Key"
+    echo "-> Generating SSH Key"
     ssh-keygen -t rsa -b 4096 -N '' -f ~/.ssh/id_rsa
 fi
 
 echo "Disable strict Host Key checking"
 if [[ -e ~/.ssh/config ]]; then
-    echo "Existing configuration file so it will not be modified"
-    echo "Please verify that StrictHostKeyChecking is disabled"
+    echo "-> Existing configuration file so it will not be modified"
+    echo "-> Please verify that StrictHostKeyChecking is disabled"
 else
     echo "StrictHostKeyChecking no" >> ~/.ssh/config
 fi
 
 echo "Keypair configuration"
 if ! openstack keypair show $KEYPAIR &> /dev/null; then
-    echo "Registering key pair"
+    echo "-> Registering key pair"
     openstack keypair create --public-key ~/.ssh/id_rsa.pub "${PREFIX}-airflow-admin"
 fi
 
 echo "Security group configuration"
 if ! openstack security group show $SECGROUP &> /dev/null; then
-    echo "Creating security group"
+    echo "-> Creating security group"
     openstack security group create $SECGROUP
     # SSH
     openstack security group rule create --protocol tcp --dst-port 22:22 --remote-ip 0.0.0.0/0 $SECGROUP
