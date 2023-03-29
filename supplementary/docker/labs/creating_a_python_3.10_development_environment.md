@@ -1,6 +1,6 @@
 # Running a Python 3.10 development environment
 In this lab we will be running a container so we can use the new `match case` statement introduced in python 3.10:
-- [Structural Pattern Matchin](https://peps.python.org/pep-0622/)
+- [Structural Pattern Matching](https://peps.python.org/pep-0622/)
 - [Structural Pattern Matching Usage](https://henryiii.github.io/level-up-your-python/notebooks/2.8%20Pattern%20Matching.html)
 
 If we look into the python version of the host we will see that it has:
