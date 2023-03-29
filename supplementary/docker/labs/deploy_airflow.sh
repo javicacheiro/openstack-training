@@ -5,7 +5,7 @@ SERVER_NAME="${PREFIX}-airflow"
 DATA_VOLUME="${PREFIX}-airflow-data"
 IMAGE="baseos-Rocky-8.5-v2"
 NETWORK="provnet-formacion-vlan-133"
-FLAVOR="m1.2c4m"
+FLAVOR="m1.4c8m"
 KEYPAIR="${PREFIX}-airflow-admin"
 SECGROUP="airflow"
 
