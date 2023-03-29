@@ -53,25 +53,22 @@ NOTE: Before running apply you have to load your `openstack-rc` file.
 When you perform changes in infraestructure, terraform will transition the infrastructure from one state to the next state.
 
 The process to follow is the following:
-- You edit `main.tf`
-    ```
-    vim main.tf
-    ```
-- You validate the changes
+- Edit `main.tf`
+- Validate the changes
     ```
     terraform validate
     ```
-- You see what is the plan to transition from one state to the next one
+- Check what is the plan to transition from one state to the next one
     ```
     terraform plan
     ```
-- If everything looks fine you apply the changes
+- If everything looks fine apply the changes
     ```
     terraform apply
     ```
 
 ## Lab
-- [Using terraform_basics](labs/using_terraform_basics)
+- [Using terraform_basics](labs/using_terraform_basics.md)
 - [Real use case: rancher (kubernetes deployment tool)](https://github.com/rancher/quickstart/tree/master/rancher)
 
 ## References:
