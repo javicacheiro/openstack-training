@@ -11,7 +11,7 @@ Lab:
 You can find a lot of pre-packaged roles and collections in [Ansible Galaxy](https://galaxy.ansible.com/).
 
 ## Inventory
-The inventory it is we store the information about the available hosts.
+The inventory it is where we store the information about the available hosts.
 
 The system wide inventory is in `/etc/ansible/hosts` but we can use also use our own inventory file. We can and set it with the `ANSIBLE_INVENTORY` variable:
 ```
@@ -21,6 +21,22 @@ or we can pass it as a command-line option:
 ```
 -i ~/ansible_hosts
 ```
+
+Another useful option it is to include an `ansible.cfg` file in the project's main directory and define there the inventory, as well as any other options we would like to customize for the given project. For example:
+```
+[defaults]
+inventory = inventories/cluster1/hosts
+remote_user = cesgaxuser
+host_key_checking = false
+deprecation_warning = false
+
+[privilege_escalation]
+become = True
+become_method = sudo
+become_user = root
+become_ask_pass = False
+```
+
 
 ## Playbook
 The configuration to apply is defined in a file called a **playbook** and it is composed of plays and each **play** applies **tasks** or **roles** to a given group of **hosts**.
@@ -175,7 +191,7 @@ These are some examples or the most useful modules:
   notify: restart opensearch-dashboards
 ```
 
-## Reference
+## References
 To create our tasks it is especially useful to have at hand the documentation of the modules and plugins contained in ansible-core:
 - [Builtin modules reference](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/index.html)
 
