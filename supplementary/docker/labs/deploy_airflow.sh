@@ -68,7 +68,7 @@ while ! ssh cesgaxuser@$IP echo OK &> /dev/null; do
 done
 
 echo "Data volume configuration"
-if ! openstack volume show $SECGROUP &> /dev/null; then
+if ! openstack volume show $DATA_VOLUME &> /dev/null; then
     openstack volume create --size 100 $DATA_VOLUME
     openstack server add volume $SERVER_NAME $DATA_VOLUME
     ssh cesgaxuser@$IP '
@@ -84,7 +84,7 @@ scp docker.repo docker-compose.yaml cesgaxuser@$IP:
 
 echo "Installing docker and updating the server"
 ssh cesgaxuser@$IP '
-    sudo dnf -y update
+    #sudo dnf -y update
     sudo cp docker.repo /etc/yum.repos.d
     sudo dnf install -y --enablerepo docker docker-ce docker-compose-plugin
     sudo systemctl enable docker
