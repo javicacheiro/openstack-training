@@ -17,7 +17,7 @@ You can also deploy a private registry.
 
 ## Installing Docker
 Lab:
-- [Docker installation](labs/docker_installation)
+- [Docker installation](labs/docker_installation.md)
 
 ## Using Docker
 To look for existing container images you can go to public registries like Docker Hub:
@@ -62,7 +62,7 @@ Finally you can stop the container with:
 The container will continue to exist in a stopped state once exited (see `docker ps -a`)
 
 Lab:
-- [Running a Python 3.10 development environment](labs/creating_a_python_3.10_development_environment)
+- [Running a Python 3.10 development environment](labs/creating_a_python_3.10_development_environment.md)
 
 ### Running a daemonized container
 The `-d` flag tells Docker to run the container and put it in the background
@@ -84,7 +84,7 @@ Or we can do both things in a single command:
     docker rm -f <container_name>
 
 Lab:
-- [Running Redis](labs/running_redis)
+- [Running Redis](labs/running_redis.md)
 
 ### Docker Compose
 Docker Compose allows to run deployments with multiple containers defined in a `docker-compose.yml` file.
@@ -394,6 +394,6 @@ Lab:
 
 ## Labs
 Labs:
-- [Airflow installation](labs/airflow_installation)
+- [Airflow installation](labs/airflow_installation.md)
 - [Automatic Airflow deployment (fully automated)](labs/deploy_airflow.sh)
 - [Project Lab: Installing OpenSearch in single node mode Docker](../../project-lab/opensearch/single-node-docker/installing_opensearch_single_node_docker.md)
