@@ -2,10 +2,10 @@
 
 PREFIX="curso800"
 SERVER_NAME="${PREFIX}-airflow"
-DATA_VOLUME="airflow-data"
+DATA_VOLUME="${PREFIX}-airflow-data"
 IMAGE="baseos-Rocky-8.5-v2"
 NETWORK="provnet-formacion-vlan-133"
-FLAVOR="m1.1c2m"
+FLAVOR="m1.2c4m"
 KEYPAIR="${PREFIX}-airflow-admin"
 SECGROUP="airflow"
 
