@@ -6,10 +6,10 @@ We will be need 4 instances.
 We can launch them using something like:
 ```
 for n in {1..3}; do
-    openstack server create --flavor a1.2c4m --image baseos-Rocky-8.5-v2 --key-name javicacheiro --security-group SSH --security-group opensearch --network provnet-formacion-vlan-133 opensearch-$n
+    openstack server create --flavor m1.2c4m --image baseos-Rocky-8.5-v2 --key-name javicacheiro --security-group SSH --security-group opensearch --network provnet-formacion-vlan-133 opensearch-$n
 done
 
-openstack server create --flavor a1.2c4m --image baseos-Rocky-8.5-v2 --key-name javicacheiro --security-group SSH --network provnet-formacion-vlan-133 dashboards
+openstack server create --flavor m1.2c4m --image baseos-Rocky-8.5-v2 --key-name javicacheiro --security-group SSH --network provnet-formacion-vlan-133 dashboards
 ```
 
 NOTE: The **opensearch security group** is already created enabling access to:
@@ -29,7 +29,7 @@ Alternatively you can also launch the instances using horizon, it is very simple
   - Instance Name: `opensearch`
   - Count: 3
   - Source: baseos-Rocky-8.5-v2
-  - Flavor: **a1.2c4m**: 2 cores, 4GB RAM: this is more than enough for the lab, but you have to edit the `openstack/run_docker-opensearch_version.sh` helper script and reduce the memory. For production we would use something like m1.8c16m
+  - Flavor: **m1.2c4m**: 2 cores, 4GB RAM: this is more than enough for the lab, but you have to edit the `openstack/run_docker-opensearch_version.sh` helper script and reduce the memory. For production we would use something like m1.8c16m
   - Networks: provnet-formacion-vlan-133
   - Security Groups: **opensearch**, SSH
   - Key Pair: your imported key pair
