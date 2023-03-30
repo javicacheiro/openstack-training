@@ -77,10 +77,10 @@ We can test that opensearch is working with (`<address>` is the ip address of on
 curl -X GET -u admin:admin --silent --insecure http://<address>:9200
 
 # List nodes
-curl -X GET -u admin:admin --silent --insecure https://<address>:9200/_cat/nodes?v
+curl -X GET -u admin:admin --silent --insecure http://<address>:9200/_cat/nodes?v
 
 # List indices
-curl -X GET -u admin:admin --silent --insecure https://<address>:9200/_cat/indices?v
+curl -X GET -u admin:admin --silent --insecure http://<address>:9200/_cat/indices?v
 ```
 
 We can also check that opensearch dashboards is working:
@@ -109,5 +109,5 @@ ansible all -a 'ss -ltpn'
 ## Cleanup
 - Delete the instances
 ```
-openstack server delete opensearch-1 opensearch-2 opensearch-3 opensearch-dashboards
+../destroy.sh
 ```
