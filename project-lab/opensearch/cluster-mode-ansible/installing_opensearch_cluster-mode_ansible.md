@@ -55,7 +55,7 @@ Some notes about the parameters used in the inventory:
 ## Applying the configuration
 Let's first check that all nodes are responding and that we are able to connect to them:
 ```
-ansible all -m ping
+ansible all -m ping -o
 ```
 
 Now we can run the ansible playbook:
