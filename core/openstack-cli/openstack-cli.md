@@ -281,6 +281,14 @@ To force backup of an in-use volume (not recommened):
 openstack volume backup create --force --name mariadb-data-backup-2 mariadb-data
 ```
 
+## Creating a floating IP
+We can create a floating IP that we can later add to our servers:
+```
+openstack floating ip create public-default
+```
+
+We create the floating IP address in the `public-default` external network. Foating ips can only be created in networks flagged as external (see the networking unit).
+
 ## Adding resources to a server
 We can add resources (floating ip, volume, security group, network, port) to an existing server.
 
