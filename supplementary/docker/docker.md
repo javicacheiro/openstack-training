@@ -340,6 +340,23 @@ To fix it we have to change back the default policy:
 
     iptables -P FORWARD ACCEPT
 
+To make the change permanent modify the `/etc/docker/daemon.json` config file. This would be a reasonable configuration:
+```json
+{
+    "bridge": "none",
+    "ip-forward": false,
+    "iptables": false,
+    "log-opts": {
+        "max-file": "5",
+        "max-size": "50m"
+    }
+}
+```
+
+
+```
+
+
 ## Running containers in privileged mode
 Sometimes you may need to run a container in privileged mode so it has direct access to some devices:
 
