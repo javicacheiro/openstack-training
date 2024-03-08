@@ -97,9 +97,28 @@ Then when launching a new instance we will be able to associate this port to it:
 ![associate-port](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-associate-port-1.png?raw=true)
 ![associate-port](https://github.com/javicacheiro/openstack-training/blob/main/img/openstack-associate-port-2.png?raw=true)
 
-## Forwarding traffic to the internal nodes
-Connecting to an instance in the tenant network that has a floating ip we can jump to all the other instances in the tenant network, but sometimes this is cumbersome.
+## Connecting to instances in the tenant network
+From outside we can not connect directly to the tenant network (as expected since this is a private network).
 
+We will usually configure one of our instances with a floating IP or a provider network that is accesible from outside and from this instance we can jump to other instances in the tenant network.
+
+### Option 1: SSH
+We can use ssh to the public instance and from there connect to other instances in our tenant network.
+
+### Option 2: SSH tunnel
+We can create a ssh tunnel through our public instance to access internal instances so that we will connect to each internal instance through a local port.
+
+Create the tunnel with:
+```
+ssh -N -L 10000:<private_instance_ip>:22 <public_instance_username>@<public_ip>
+```
+
+Connect to the internal instance:
+```
+ssh -p 11000 cesgaxuser@localhost
+```
+
+### Option 3: Forwarding traffic to the internal nodes
 One simple option to enable access to other instances it is to use iptables in the instance with the floating IP.
 
 Let's consider this scenario:
@@ -119,6 +138,9 @@ Now we can connect to VM2 using:
 ```
 ssh -p 1002 cesgaxuser@<floating_ip_vm1>
 ```
+
+### Option 4: Creating a VPN
+For more advanced use cases, we can create a VPN in the public instance that exposes our tenant network, eg. using wireguard.
 
 ## Deleting a tenant network and the associated router
 Follow this steps in the "Network Topology" view:
