@@ -104,6 +104,18 @@ To list the running servers in your project use:
 curl -s -H "X-Auth-Token: $TOKEN" -X GET -H "Accept: application/json" https://cloud.srv.cesga.es:8774/v2.1/servers/detail | python3 -m json.tool
 ```
 
+## List available metrics
+List available metrics in gnocchi:
+```
+curl -s -H "X-Auth-Token: $TOKEN" -X GET -H "Accept: application/json" https://cloud.srv.cesga.es:8041/v1/metric | python3 -m json.tool
+```
+
+## Metric status
+```
+http://10.108.0.111:8041/v1/status
+```
+
+
 ## Looking for examples
 It is very useful to use the `--debug` option of the `openstack-cli` to get information about the queries needed to get certain information.
 In the output it will include the requests made, the equivalent curl commands needed, and the json outputs:
