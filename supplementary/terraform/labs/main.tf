@@ -10,8 +10,9 @@ terraform {
 
 # Configure the OpenStack Provider
 provider "openstack" {
-  user_name   = "curso800"
   tenant_name = "course-1-project"
+  user_name   = "curso800"
+  user_domain_name = "Default"
   password    = "xxxx"
   auth_url    = "https://cloud.srv.cesga.es:5000/v3"
   region      = "RegionOne"
