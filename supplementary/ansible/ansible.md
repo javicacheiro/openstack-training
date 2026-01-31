@@ -13,7 +13,7 @@ You can find a lot of pre-packaged roles and collections in [Ansible Galaxy](htt
 ## Inventory
 The inventory it is where we store the information about the available hosts.
 
-The system wide inventory is in `/etc/ansible/hosts` but we can use also use our own inventory file. We can and set it with the `ANSIBLE_INVENTORY` variable:
+The system wide inventory is in `/etc/ansible/hosts` but we can use also use our own inventory file. We can set it with the `ANSIBLE_INVENTORY`variable:
 ```
 export ANSIBLE_INVENTORY=~/ansible_hosts
 ```
