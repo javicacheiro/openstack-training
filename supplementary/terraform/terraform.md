@@ -43,6 +43,10 @@ Inspect state
 
     terraform show
 
+Show the outputs
+
+    terraform output
+
 Destroy infrastructure
 
     terraform destroy
