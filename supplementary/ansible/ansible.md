@@ -37,7 +37,6 @@ become_user = root
 become_ask_pass = False
 ```
 
-
 ## Playbook
 The configuration to apply is defined in a file called a **playbook** and it is composed of plays and each **play** applies **tasks** or **roles** to a given group of **hosts**.
 
@@ -92,10 +91,18 @@ To copy a file to all hosts in the opensearch group:
 
     ansible opensearch -m copy -a "src=/etc/hosts dest=/tmp/hosts"
 
+You can see the **facts** of a system with:
+
+    ansible all -m setup
+
 ### ansible-inventory command
 We can the contents of the inventory with:
 
     ansible-inventory --graph
+
+We can also use the command to see the inventory variables of a specific host:
+
+    ansible-inventory --yaml --host mngt0
 
 ### ansible-playbook command
 To run a playbook we will use the `ansible-playbook` command, for example:
@@ -142,7 +149,7 @@ ansible-doc -t lookup -l
 ansible-doc -t lookup csvfile
 ```
 
-# Most useful modules
+## Most useful modules
 These are some examples or the most useful modules:
 
 - package: to make sure certain packages are installed
