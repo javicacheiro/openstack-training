@@ -61,7 +61,7 @@ The following is a sample playbook for opensearch:
 All these files are written in YAML so it is good to understand the syntax:
 - [YAML Syntax Reference](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html)
 
-# Facts
+## Facts
 Facts represent discovered variables about a system that can be used in playbooks to perform conditional actions.
 
 You can see the facts of a system with:
@@ -91,6 +91,11 @@ Since the `shell` module is the default one, this command can be simplified to:
 To copy a file to all hosts in the opensearch group:
 
     ansible opensearch -m copy -a "src=/etc/hosts dest=/tmp/hosts"
+
+### ansible-inventory command
+We can the contents of the inventory with:
+
+    ansible-inventory --graph
 
 ### ansible-playbook command
 To run a playbook we will use the `ansible-playbook` command, for example:
